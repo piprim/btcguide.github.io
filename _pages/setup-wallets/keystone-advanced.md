@@ -28,10 +28,10 @@ $ shasum -a 256 update.zip
 #### Generate your own seedphrase
 
 Using seedpicker:  
-https://support.keyst.one/advanced-features/recovery-phrase/construct-own-recovery-phrase
+<https://support.keyst.one/advanced-features/recovery-phrase/construct-own-recovery-phrase>
 
 Using dice:  
-https://support.keyst.one/advanced-features/recovery-phrase/use-dice-to-generate-recovery-phrase
+<https://support.keyst.one/advanced-features/recovery-phrase/use-dice-to-generate-recovery-phrase>
 
 ## Not Perfect
 No device is perfect and this one is no exception.

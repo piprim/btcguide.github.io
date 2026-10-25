@@ -59,9 +59,9 @@ zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo 
 #### Save the Output
 1. Write down the whole 24 word phrase (`zoo` repeated 23 times + `buddy` as the 24th word) *offline* on paper only.
 **Do not save this to any computer.**
-1. Scroll down to `Export Public Key Info To Specter Desktop` and click on the `Download` button. 
-This will download a `json` file to your computer, containing the extended public key info.
-Save the file to a DVD-R or USB drive to later share with Specter-Desktop.  
+1. Scroll down to `Export Public Key Info To Specter Desktop`. You have two ways to get this info into Specter-Desktop:
+   * **QR code (preferred)**: click `Show QR` and leave it on screen; you will scan it with the Specter-Desktop machine's webcam in the next section. Nothing is written to disk.
+   * **File**: click `Download` to save a `json` file containing the extended public key info, then copy it to a DVD-R or USB drive. Use this if your Specter-Desktop machine has no webcam.  
 ![](/assets/img/setup-paper-seedpicker-save-json.png){:width="70%" class="border_image"}  
 
 > Note: You do not need to record the xpub, root key fingerprint, or derivation path on your paper wallet.
@@ -71,19 +71,23 @@ Save the file to a DVD-R or USB drive to later share with Specter-Desktop.
 **Do not save the seed phrase to your hard drive (write it down on paper only), and restart your computer before restoring internet access.**
 
 Then repeat the steps above with your real seed phrase: write down all 24 words (including the calculated 24th word) **and export the public key info again**.
-The `seedpickerxp-foo.json` file from the `zoo` practice run belongs to the practice seed and must not be used.
-Only insert the DVD-R or USB drive you will use for the export once you are ready to save it.
+The QR code or `seedpickerxp-foo.json` file from the `zoo` practice run belongs to the practice seed and must not be used.
+If you use the file option, only insert the DVD-R or USB drive once you are ready to save the export.
 
 It is *highly recommended* that you wipe your hard drive before restoring internet access.
 See [advanced section](paper-advanced) for more info.
 
 
 ## Export Public Key Info to Specter-Desktop
-In the previous step, you saved your extended public key information (`seedpickerxp-foo.json`) to a DVD-R or USB drive.
+In the previous step, you either left a QR code on screen or saved your extended public key information (`seedpickerxp-foo.json`) to a DVD-R or USB drive.
 
-1. On Specter-Desktop: Click `+ Add new device`, enter a `Name` (like `Paper Wallet`), click `Choose files` and select your file (`seedpickerxp-foo.json`), and hit `continue`.
-Your file will be automatically parsed into something like this:  
+1. On Specter-Desktop: Click `+ Add new device`, enter a `Name` (like `Paper Wallet`), then either:
+   * click `Scan QR code` and hold the seedpicker QR code up to the webcam, or
+   * click `Choose files`, select your file (`seedpickerxp-foo.json`), and hit `continue`.
+
+   Either way the key info is parsed into something like this:  
 ![](/assets/img/setup-paper-specter-input.png){:class="border_image"}  
+1. Check that the fingerprint, derivation path and key match what seedpicker shows, then hit `Add device`.
 1. Your public key is now added to Specter-Desktop:  
 ![](/assets/img/setup-paper-display-pubkey.png){:width="70%" class="border_image"}  
 

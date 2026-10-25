@@ -78,9 +78,8 @@ Expert users only: <https://github.com/mflaxman/human-rng-golang>
 DVDs are less able to execute malware on your computer.
 
 ##### Option B: Use a QR-Code Airgap
-This is not currently documented.
-Pull requests with clarification are welcome.
-Specter-Desktop can receive this info via QR-code airgap.
+Seedpicker can show your public key info as a QR code and Specter-Desktop can scan it, so no file ever needs to leave the machine.
+See [the QR option in the paper wallet setup](./paper#export-public-key-info-to-specter-desktop).
 
 ## Improve Seed Generation
 
