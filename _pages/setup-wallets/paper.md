@@ -70,6 +70,10 @@ Save the file to a DVD-R or USB drive to later share with Specter-Desktop.
 **Quit all applications, remove any removable media, and turn off your internet access before continuing.**
 **Do not save the seed phrase to your hard drive (write it down on paper only), and restart your computer before restoring internet access.**
 
+Then repeat the steps above with your real seed phrase: write down all 24 words (including the calculated 24th word) **and export the public key info again**.
+The `seedpickerxp-foo.json` file from the `zoo` practice run belongs to the practice seed and must not be used.
+Only insert the DVD-R or USB drive you will use for the export once you are ready to save it.
+
 It is *highly recommended* that you wipe your hard drive before restoring internet access.
 See [advanced section](paper-advanced) for more info.
 

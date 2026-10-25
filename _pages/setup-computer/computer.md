@@ -12,6 +12,16 @@ For more details, see [Paper Wallet Setup steps](/setup-wallets/paper)._
 
 ## Install Ubuntu
 
+#### Why Ubuntu?
+This guide assumes a dedicated machine running Ubuntu for three reasons:
+
+1. Linux is far more secure than closed-source operating systems like Mac and Windows, and Ubuntu is the most popular (and arguably most beginner-friendly) distribution.
+1. Developers use it heavily, so it has the best compatibility with bitcoin tools.
+1. It raises the bar slightly, which keeps away the users most likely to hurt themselves.
+
+Advanced users can follow this guide on Mac or Windows, but you are on your own for the differences.
+A fresh install of another operating system is better than a long-used daily driver, but still a weaker choice than a dedicated Ubuntu machine.
+
 You'll want to download and install the latest Long-Term Support (LTS) version of [Ubuntu Desktop](https://ubuntu.com/download/desktop) (currently `20.04.1`).
 Put the installer on a USB stick or burn it onto a DVD.
 Both options are good, though we find DVDs are slightly preferable as they are slightly more secure and don't take up a USB port.

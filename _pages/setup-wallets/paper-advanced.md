@@ -20,6 +20,11 @@ Follow [the official Tails installation instructions](https://tails.boum.org/ins
 Then perform [the regular steps in the Setup Paper Wallet section](./paper) using that machine.
 Your computer will automatically wipe itself completely (including RAM) on shutdown.
 
+Two Tails-specific notes:
+
+* Tor Browser in Tails can only save files into the `Tor Browser` folder of your home directory. Save the seedpicker export there first, then copy it to a microSD card or USB drive to bring to Specter-Desktop.
+* You can avoid connecting Tails to the internet at all: on another machine, save the complete [seedpicker.net](https://seedpicker.net/) page to a microSD card or USB drive, then open that local copy from Tails.
+
 
 [Watch A Video On How to Install Tails](https://youtu.be/bew6uWb2Mr4)
 
