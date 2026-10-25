@@ -274,6 +274,7 @@ wordlist
 wsh
 www
 xpub
+xpubs
 yml
 youtube
 ziploc
