@@ -7,7 +7,9 @@ matrix:
       - .wordlist.txt
     encoding: utf-8
   pipeline:
-  - pyspelling.filters.url:
+  - pyspelling.filters.markdown:
+      markdown_extensions:
+      - markdown.extensions.fenced_code:
   - pyspelling.filters.html:
       comments: false
       attributes:
@@ -16,9 +18,7 @@ matrix:
       ignores:
       - code
       - pre
-  - pyspelling.filters.markdown:
-      markdown_extensions:
-      - markdown.extensions.fenced_code:
+  - pyspelling.filters.url:
   sources:
   - '_includes/**'
   - '_layouts/**'

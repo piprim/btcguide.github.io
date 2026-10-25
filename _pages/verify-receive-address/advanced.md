@@ -76,6 +76,13 @@ Steps:
 1. Follow the instructions in the previous step and setup a clean (freshly wiped) machine to verify receive addresses.
 1. Export a very large amount of receive addresses to a file.
 You never want to have to repeat this setup and paper is cheap, so consider a very large number (say 10,000 addresses).
+Specter-Desktop has no address export, so use one of these:
+   * **Sparrow** (easiest): create a watch-only multisig wallet from your 3 xpubs (as with Caravan above), open the `Addresses` tab and click `Export File...` in the `Receiving Addresses` header.
+   This writes a `csv` file of index and address.
+   Sparrow only tracks addresses up to its gap limit, so raise it first under the wallet's `Settings` > `Advanced`.
+   * **Coldcard**: `Address Explorer` > select your multisig wallet > press `1` to save `addresses.csv` to the microSD card.
+   Each export covers 250 addresses; to get the next batch, raise `AE Start Index` under `Advanced/Tools` > `Danger Zone` and export again.
+1. Before trusting the list, check that its first few addresses match the ones displayed on your hardware wallets.
 1. Print this file, and consider making multiple copies.
 
 Now that you never need to check this computer again, you can go about using it for whatever you like and not have to worry about keeping it secure.

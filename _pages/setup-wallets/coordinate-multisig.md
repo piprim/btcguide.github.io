@@ -14,7 +14,11 @@ This is a one-time setup that you'll never need to repeat.
 1. Give a name to your wallet (e.g. `Redundant Multisig`), choose `Segwit` (default), `2-of-3` (default) and select your 3 cosigners: `Keystone`, `Coldcard` and `Paper Wallet`
 ![](/assets/img/coordinate-multisig-specter-desktop-quorum.png){:width="85%" class="border_image"}
    
-1. Select your public keys. If you've followed the default steps, you'll just select all 3 of them.  
+1. Select your public keys. If you've followed the default steps, you'll just select all 3 of them.
+For each device, the key to use has `Purpose` set to `Multisig (Segwit)` and `Derivation` set to `m/48h/0h/0h/2h` (some devices write this as `m/48'/0'/0'/2'`).
+Recent versions of Specter-Desktop hide keys that don't fit the wallet type, so this is normally the only choice offered.
+If a device shows more than one key, pick that one: a single-sig key (`m/84h/...`) or a nested-segwit key (ending in `/1h`) will give you a wallet your hardware wallets reject or addresses that don't match.
+All 3 keys must use the same derivation path.  
 ![](/assets/img/coordinate-multisig-specter-desktop-keys-1.png){:width="85%" class="border_image"}
 ![](/assets/img/coordinate-multisig-specter-desktop-keys-2.png){:width="85%" class="border_image"}
 
