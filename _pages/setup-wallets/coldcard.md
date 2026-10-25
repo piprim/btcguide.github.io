@@ -25,11 +25,15 @@ Follow the steps on Coldcard's website:
 
 1. Remove the microSD card from your Coldcard and put it in your computer's card reader.
 
-1. On Specter-Desktop: Click `+ Add new device` > `Choose files` and select the exported file from the SD card:
+1. On Specter-Desktop: Click `+ Add new device`, pick `Coldcard` as the device type and give it a name (e.g. `Coldcard`).
 ![](/assets/img/setup-coldcard-specter-scan.jpg){:width="85%" class="border_image"}
 
-1. Give your device a name (e.g. `Coldcard`) and click `Continue`.
+1. Click `Upload from SD card` and select the exported file (named like `ccxp-XXXXXXXX.json`).
+
+1. Check that the keys appear in the table, then click `Add device`.
 ![](/assets/img/setup-coldcard-specter-scanned.jpg){:width="85%" class="border_image"}
+
+_The screenshots are from an older Specter-Desktop; the layout has changed but the steps are the same._
 
 
 {% include next_steps.md next_url="coordinate-multisig" next_name="Coordinate Multisig" %}

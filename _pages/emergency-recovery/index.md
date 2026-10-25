@@ -6,7 +6,7 @@ By default, you sign your `2-of-3` transactions on your `2` hardware wallets (Ke
 If one device is damaged, destroyed or lost, you still have the other good hardware wallet to sign with, and two other seeds to choose from for the second signature: the lost device's [backup seed](/backup-wallet/seeds), and the 3rd seed on your [paper wallet](/setup-wallets/paper).
 
 This page is also useful for testing that you can actually sign a transaction with the paper wallet's seed *before* you deposit significant funds, so you know all 3 seeds work.
-It is always a good idea to test your backups.
+It is always a good idea to test your backups, and you can rehearse the whole procedure [on testnet](/setup-computer/bitcoin-node-advanced#practice-on-testnet) first.
 
 You have several options.
 
@@ -55,4 +55,6 @@ If correctly imported, Electrum will then detect that this transaction has been 
 The steps above load the paper wallet's seed into Electrum so you can sign with the 3rd key.
 Alternatively, import the good hardware wallet's `Zpub` and the *paper wallet's* `Zpub` in step 4, and type in the lost *hardware wallet's* backup seed in step 5.
 
-{% include next_steps.md %}
+If a seed may have been exposed rather than just lost, don't stop at recovery: [rotate the key](/key-rotation).
+
+{% include next_steps.md next_url="/key-rotation" next_name="Key Rotation" %}

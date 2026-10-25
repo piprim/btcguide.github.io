@@ -29,15 +29,17 @@ Follow [the instructions on Keystone's website](https://support.keyst.one/gettin
 1. On Keystone: `Menu` > `Multisig Wallet` > `•••` button in the top right > `Show/Export XPUB`.  
 ![](/assets/img/setup-keystone-export-pubkey.jpeg){:width="85%" class="border_image"}
 
-1. On Specter-Desktop: Click `+ Add new device` > `Scan`  
+1. On Specter-Desktop: Click `+ Add new device`, pick `Keystone` as the device type (older versions list it as `Cobo Vault`) and give it a name (e.g. `Keystone`).  
 ![](/assets/img/setup-keystone-specter-scan-1.jpg){:width="85%" class="border_image"}
 ![](/assets/img/setup-keystone-specter-scan-2.png){:width="85%" class="border_image"}
 
-1. Hold the QR code on your Keystone up to your webcam so your computer can scan it.
+1. Click `Scan QR code` and hold the QR code on your Keystone up to your webcam so your computer can scan it.
 
-1. Give your device a name (i.e. `Keystone`) and hit `Continue`.
+1. Check that the keys appear in the table, then hit `Add device`.
 ![](/assets/img/setup-keystone-specter-scanned-1.png){:width="85%" class="border_image"}
 ![](/assets/img/setup-keystone-specter-scanned-2.png){:width="85%" class="border_image"}
+
+_The screenshots are from an older Specter-Desktop; the layout has changed but the steps are the same._
 
 _You can perform these steps via SD card, but since it is harder to do and less secure you really shouldn't!_
 
