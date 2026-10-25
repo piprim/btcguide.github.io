@@ -10,15 +10,19 @@ TODO: add content
 #### Do Not Disclose Your Addresses
 TODO: add content
 
-## Option B - Electrum Software Wallet
+## Option C - Sparrow Software Wallet
 
 #### Use an Airgap Machine
-Tails strongly recommended.
+Sparrow is not included in Tails, so use a dedicated machine instead: boot an Ubuntu live USB (or a freshly wiped install) with networking off, and never connect it to the internet while a seed is loaded.
+On a separate online computer, download the Sparrow release for Linux plus its manifest and signature from [the Sparrow download page](https://sparrowwallet.com/download/), verify them following the instructions on that page, and carry the installer over on a USB drive.
+Sparrow runs fine without a node connection; it will simply show the wallet as offline, which is all you need to sign.
 
-In step 7 on the previous page, instead of saving the PSBT to a file, you can photograph Specter-Desktop's transaction QR code with your phone.
-Then in Electrum, use `Tools` > `Load transaction` > `From QR code` and hold the phone up to the airgapped machine's webcam; you may need to zoom and adjust the distance before it scans cleanly.
-This avoids moving the PSBT around on USB or SD cards to gather signatures.
+#### Move the PSBT by QR Code
+In step 8 on the previous page, instead of carrying the PSBT (Partially Signed Bitcoin Transaction) on a USB or SD card, show it as a QR code in Specter-Desktop and scan it with the airgapped machine's webcam using Sparrow's `Scan QR`.
+After signing, Sparrow's `Show QR` displays the signed PSBT, which Specter-Desktop can scan back.
+You may need to adjust distance and lighting before the animated code scans cleanly.
 
-#### Verify Validity of Electrum Software
-You can read instructions on how to do this [here](https://www.reddit.com/r/Bitcoin/comments/aa3l6n/how_to_check_if_your_electrum_wallet_is_legit/).
+#### Verify the Sparrow Download
+Sparrow releases are signed by its developer; the [download page](https://sparrowwallet.com/download/) explains how to check the signature with `gpg` and the manifest with `sha256sum`.
+Do this on the online machine before copying the installer to the airgapped one.
 

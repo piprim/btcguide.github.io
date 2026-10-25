@@ -13,7 +13,7 @@ Rotate a key as soon as any of these happens:
 * A hardware wallet is lost or stolen **and** you are not confident its PIN will hold up.
 * A device is known to have generated weak seeds, like the [Coldcard bug](/known-issues/hardware/coldcard).
 * Someone who held a key for you (a friend, a lawyer, a business partner) leaves that role.
-* A key has been loaded into a hot wallet, for example after an [emergency recovery](/emergency-recovery) through Electrum.
+* A key has been loaded into a hot wallet, for example after an [emergency recovery](/emergency-recovery) through Sparrow.
 Treat that key as hot from then on.
 
 With a `2-of-3`, one compromised key cannot spend your coins, so there is no need to panic.

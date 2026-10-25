@@ -34,26 +34,32 @@ On the Trezor you can load either the lost hardware wallet's backup seed, or the
 
 TODO: add explanation/screenshots.
 
-#### Option C - Electrum
-Electrum is an open-source software wallet that is free and readily available, but difficult to use with multisig.
-**As it will be touching private key material, we strongly recommend you run this on an airgapped machine** (see [advanced section](advanced)).
+#### Option C - Sparrow (software wallet)
+[Sparrow](https://sparrowwallet.com/) is a free, open-source desktop wallet with first-class multisig support.
+It replaces the Electrum instructions that used to be here, which broke on importing cosigner keys.
+**As it will be touching private key material, run it on an airgapped machine** (see [advanced section](advanced)).
 
 TODO: add screenshots.
 
-1. Download and install Electrum from [electrum.org](https://electrum.org/).
-1. Create a new multisignature wallet using the wizard, and select "2 of 3" as your quorum.
-1. Using your Specter-Desktop wallet backup file, identify your `Zpub`s from the JSON or PDF file.
-1. For the first two keys (Coldcard and Keystone), import the `Zpub` master public keys into the Electrum multisignature wizard as keys in the multisignature quorum, ensuring the pathway matches the one Specter-Desktop wallet used e.g. `m/48'/0'/0'/2'`.
-Electrum will display these as `xpub` master keys.
-1. For the seedpicker paper wallet, select private keys, and Electrum will present a box to type in your seedpicker seed.
-Ensure you use the drop-down menu to select that this is a BIP39 seed or otherwise Electrum will not correctly recognise and recover this seed.
-Notice from this point, you should now consider this private key as 'hot' assuming your Electrum machine is online.
-1. You can generate a PSBT (Partially Signed Bitcoin Transaction) from Specter-Desktop, sign it with your remaining good hardware wallet (e.g. the Coldcard or Keystone), and then load that PSBT into Electrum via `Tools` > `Load from file`.
-If correctly imported, Electrum will then detect that this transaction has been signed by 1 of 2 required signatures, and present you the opportunity to sign it with the seedpicker paper wallet key. 
-1. You can then save this PSBT file and broadcast it via Specter-Desktop. 
+1. Download Sparrow from [its download page](https://sparrowwallet.com/download/), verify the signature, and install it on your airgapped machine.
+1. Have your [public key backup](/backup-wallet/public-keys) at hand: you need the fingerprint, derivation path and `Zpub` of all 3 keys.
+1. `File` > `New Wallet`, name it, set `Policy Type` to `Multi Signature`, leave `Native Segwit` and `2 of 3`.
+1. Fill in the 3 keystores:
+   * For each key you are **not** signing with, choose `xPub / Watch Only Wallet` and type its fingerprint, derivation path (`m/48'/0'/0'/2'`) and `Zpub` from the backup.
+   Airgapped devices can also be imported with `Airgapped Hardware Wallet` from their export file or QR code.
+   * For the key you **are** signing with (normally the paper wallet seed), choose `New or Imported Software Wallet` > `Mnemonic Words (BIP39)` > `Enter 24 Words`, type the words, leave the passphrase empty, and wait for `Valid checksum`.
+   Click `Create Keystore`, check the derivation path reads `m/48'/0'/0'/2'`, then `Import Keystore`.
+   From this moment that seed is "hot" on this machine.
+1. **Before anything else**, compare the fingerprint and `Zpub` Sparrow now shows for that keystore with your public key backup.
+If they differ, you typed a word wrong or the derivation path is off; fix it before continuing.
+1. Click `Apply`. Sparrow's first receive address must match the one Specter-Desktop shows for the same index; if it does, the wallet is rebuilt correctly.
+1. In Specter-Desktop, create the transaction, sign it with your remaining good hardware wallet, and save the PSBT (Partially Signed Bitcoin Transaction) to a file or show it as a QR code.
+1. In Sparrow: `File` > `Open Transaction` (or `Load PSBT` from file, or `Scan QR`), check the destination and amount, click `Sign`, then `Save PSBT` or `Show QR`.
+1. Load the signed PSBT back into Specter-Desktop and broadcast it.
+1. Afterwards, wipe the airgapped machine and [rotate](/key-rotation) the key you typed in if the machine was ever less than fully trusted.
 
-The steps above load the paper wallet's seed into Electrum so you can sign with the 3rd key.
-Alternatively, import the good hardware wallet's `Zpub` and the *paper wallet's* `Zpub` in step 4, and type in the lost *hardware wallet's* backup seed in step 5.
+The steps above type the paper wallet's seed into Sparrow so you can sign with the 3rd key.
+Alternatively, enter the good hardware wallet's and the *paper wallet's* keys as watch-only, and type the lost *hardware wallet's* backup seed as the software keystore.
 
 If a seed may have been exposed rather than just lost, don't stop at recovery: [rotate the key](/key-rotation).
 
