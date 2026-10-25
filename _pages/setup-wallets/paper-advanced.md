@@ -26,7 +26,7 @@ Your computer will automatically wipe itself completely (including RAM) on shutd
 If you are truly paranoid, remove the hard drive from the machine (before booting up Tails) so there is no possibility that any private key material can be written to disk.
 
 
-[Watch A Video On How To Remove The Hard Drive and Wi-Fi Card](https://youtu.be/AQuSs2LdARo)
+[Watch A Video On How To Remove The Hard Drive and WiFi Card](https://youtu.be/AQuSs2LdARo)
 
 
 

@@ -23,6 +23,6 @@ matrix:
   - '_includes/**'
   - '_layouts/**'
   - '_pages/**'
-  - '*.md'
+  - '*.md|!CLAUDE.md'
   - '*.html'
   default_encoding: utf-8
