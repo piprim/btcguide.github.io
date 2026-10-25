@@ -27,6 +27,29 @@ As you are only carrying 1 (of a needed 2) seeds, if you are robbed during this 
 Important note: in the event a seed is compromised you need to retrieve `m` seeds ASAP to "rotate" out the seed that was stolen (this is accomplished by moving your funds to a new multisig scheme where you control *all* 3 seeds again).
 
 
+## Example Layouts
+There is no single right answer, but here is a starting point for the 5 items of a `2-of-3` (2 hardware wallets, 3 seed backups) and the 10 items of a `3-of-5`.
+A hardware wallet and its own seed backup are the same key, so they may share a row in the "key" column but should not share a location.
+
+| Key | `2-of-3` device | `2-of-3` seed backup |
+|-----|-----------------|----------------------|
+| A   | Home safe | Second spot on your property |
+| B   | Home safe | Safe-deposit box, bank 1 |
+| C   | (paper wallet, no device) | Trusted family member or friend, another city |
+
+Note that the home safe holds 2 devices, which is a quorum on its own if both PINs fall; keep device B elsewhere (workplace safe, second residence) if you can.
+
+| Key | `3-of-5` location |
+|-----|-------------------|
+| A   | Home safe |
+| B   | Second spot on your property or second residence |
+| C   | Safe-deposit box, bank 1 |
+| D   | Safe-deposit box, bank 2 (different institution) |
+| E   | Trusted family member, friend or lawyer, another city |
+
+Two seeds at home in a `3-of-5` largely defeats the point of the larger quorum; if you cannot manage 5 locations, stick with `2-of-3`.
+Keep `m - 1` keys outside your home region so an evacuation does not strand you.
+
 ## Estate Planning
 The hardest bitcoin security question for most bitcoiners to answer is "what happens to your bitcoin if you get hit by a bus?"
 Unfortunately, ensuring your bitcoin is recoverable by your loved ones **and nobody else** is a very challenging task.
