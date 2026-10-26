@@ -15,11 +15,39 @@ Bitcoin Core's initial block download takes a few days to sync, so we recommend 
 #### Minimum Equipment to Buy:
 
 * 1 low-end computer with webcam - see below for more information about system requirements
-* 1 [Coldcard Mark3 Hardware Wallet](https://coldcardwallet.com/) with 1 microSD card - must be <= 32 GB for `FAT` formatting, but *much* smaller is fine. (The previous Mark2 version may work, but since this is a security product it is always recommended to buy the latest version.)
-* 1 [Keystone (formerly Cobo Vault)](https://keyst.one/) - Essential or Pro model
+* 1 [Keystone](https://keyst.one/) hardware wallet (Essential or Pro model)
+* 1 [Coldcard](https://coldcard.com/) with 1 microSD card, **or** another device from a different vendor than your Keystone - see [Choosing the Second Hardware Wallet](#choosing-the-second-hardware-wallet) below
 * 1 DVD-R (if your computer has a DVD drive) or USB stick for installing [Ubuntu](https://ubuntu.com/)
 * 1 pen + 3 pieces of paper (or notecards) to write down your BIP39 seed phrases
 * 1 printer, 2 pieces of paper, and scissors - to print out [2 pages](setup-wallets/paper#generate-seed) of non-sensitive (public) information. You don't need to buy a printer if you can ask someone else to print these pages out for you. You will use the scissors to cut out the words.
+
+#### Choosing the Second Hardware Wallet
+The step-by-step pages in this guide use a [Coldcard](/setup-wallets/coldcard).
+It is still an acceptable choice, but only with precautions: a firmware bug made Coldcard-generated seeds guessable from 2021 to 2026, and the vendor was slow to disclose it (see [known issues](/known-issues/hardware/coldcard)).
+If you use one:
+
+* Update the firmware **before** generating any seed.
+* Generate the seed from 50 or more of your own dice rolls (see [advanced setup](/setup-wallets/coldcard-advanced)), so you never depend on the device's random number generator.
+* Keep it as one key among devices from different vendors, as this guide does; Coldcard owners who did so lost nothing in 2026.
+
+Any other device works with the same steps if it meets these requirements:
+
+* Supports PSBTs (Partially Signed Bitcoin Transactions) and native segwit multisig, and can *register* the multisig wallet on the device so it can verify receive addresses.
+* Communicates by QR code or microSD card rather than USB, to keep the airgap.
+* Open-source firmware.
+* Made by a different vendor than your other hardware wallet, so one vendor's bug cannot cost you two keys.
+
+Devices that meet them today, with their trade-offs:
+
+| Device | Airgap | Notes |
+|--------|--------|-------|
+| [Coldcard](/known-issues/hardware/coldcard) | microSD (Q model also QR) | Secure element, best multisig tooling; use dice for the seed and weigh the vendor's 2026 track record |
+| [Passport Prime](/known-issues/hardware/passport) | QR + microSD, but has Bluetooth and NFC radios | Secure element, polished, expensive; the airgapped Passport Core was discontinued in 2026 |
+| [Jade Plus](/known-issues/hardware/jade) | QR + microSD | Cheap; no secure element, unlock relies on an online "oracle" unless used stateless |
+| [SeedSigner](/known-issues/hardware/seedsigner) | QR only | Build it yourself from a Raspberry Pi; stateless; also a good upgrade from the paper wallet |
+| [BitBox02](/known-issues/hardware/bitbox) | None (USB) | Solid device, but breaks this guide's airgap rule |
+
+Whichever you choose, any microSD card must be 32 GB or smaller for `FAT` formatting; much smaller is fine.
 
 #### Computer System Requirements
 The software you're running on this machine has very low resource requirements, so you can likely repurpose an old laptop that you have laying around.

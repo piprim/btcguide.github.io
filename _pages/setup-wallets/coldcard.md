@@ -2,6 +2,8 @@
 title: Setup Coldcard
 ---
 
+_Read the [precautions](/equipment#choosing-the-second-hardware-wallet) first: update firmware before generating a seed, and prefer a seed from dice rolls._
+
 We recommend powering your Coldcard using a portable battery pack (best) or a wall outlet, instead of a computer, because we want to maintain as much of an "airgap" as possible.
 
 Communication between your computer and Coldcard should only happen by manually transferring data over a microSD card.

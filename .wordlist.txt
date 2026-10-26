@@ -286,3 +286,10 @@ Mk4
 Mk5
 keystore
 keystores
+SeedSigner
+Passport
+BitBox02
+QuantumLink
+integrations
+microcontroller
+sidechain
