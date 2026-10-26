@@ -43,9 +43,9 @@ You will set up the multisig in the software wallet of your choice  by importing
 
 It is recommended to use an eternally quarantined machine, meaning that it is never again connected to the internet and not used for any other purpose. That way, the attack surface is reduced and you are not at risk of malware on an ongoing basis. 
 
-Alternatively, you can use Tails, which you might already have used when [setting up your Paper Wallet](https://btcguide.github.io/setup-wallets/paper-advanced).
+Alternatively, you can use Tails, which you might already have used when [setting up your Paper Wallet](/setup-wallets/paper-advanced).
 
-1. [Verify](https://btcguide.github.io/setup-wallets/coordinate-multisig-advanced) that all the Zpub/xpub keys match on both the Keystone and the Coldcard
+1. [Verify](/setup-wallets/coordinate-multisig-advanced) that all the Zpub/xpub keys match on both the Keystone and the Coldcard
 
 ##### Electrum
 
@@ -63,7 +63,7 @@ Alternatively, you can use Tails, which you might already have used when [settin
 1. Turn off WiFi
 1. Click "WALLET"
 1. On the right side of the page, set 2 of 3 quorum, and set P2WSH address type
-1. On the left side of the page, select the dropdown to "Enter as text", and type in all 3 of your Zpub keys [shown](https://btcguide.github.io/setup-wallets/coordinate-multisig-advanced) on either your Keystone or Coldcard
+1. On the left side of the page, select the dropdown to "Enter as text", and type in all 3 of your Zpub keys [shown](/setup-wallets/coordinate-multisig-advanced) on either your Keystone or Coldcard
 1. Allow Caravan some time to generate the wallet, and then use the Addresses tab to verify the addresses match the addresses shown on the hardware wallets
 
 #### Option B: Print the Addresses to Paper

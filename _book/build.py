@@ -13,7 +13,7 @@ Usage: python3 _book/build.py          -> writes _book/out/book.md (pandoc input
                                           so every heading moves down one level,
                                           anchors become HTML, images are /assets/img/...
 """
-import datetime, posixpath, re, subprocess, sys, pathlib
+import datetime, os, posixpath, re, subprocess, sys, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 OUT = ROOT / "_book" / "out"
@@ -54,6 +54,7 @@ def render(f, url, depth, anchor, title_suffix=""):
     page_dir = url.rstrip("/") + "/" if f.name == "index.md" else url.rsplit("/", 1)[0] + "/"
     body = INCLUDE.sub(lambda mm: "" if mm.group(1) == "next_steps.md" else (ROOT / "_includes" / mm.group(1)).read_text(), body)
     body = re.sub(r"{%.*?%}", "", body, flags=re.S)
+    body = body.replace("{{ page.title }}", title)
     body = re.sub(r"{:[^}]*?width=\"(\d+%)\"[^}]*}", r"{width=\1}", body)  # kramdown width -> pandoc width
     body = re.sub(r"{:[^}]*}", "", body)
     body = re.sub(r"^-{3,}\s*$", "* * *", body, flags=re.M)  # a bare --- line would start a YAML block in pandoc
@@ -79,6 +80,8 @@ def main():
     idx = (ROOT / "index.html").read_text()
     intro_html, toc_html = idx.split("<hr>", 1)
     intro_html = re.sub(r"^---.*?---\n", "", intro_html, flags=re.S)
+    repo = "https://github.com/" + os.environ.get("GITHUB_REPOSITORY", "btcguide/btcguide.github.io")  # set by GitHub Actions
+    intro_html = intro_html.replace("{{ site.github.repository_url }}", repo)
     intro = subprocess.run(["pandoc", "-f", "html", "-t", "gfm", "--wrap=none"], input=intro_html, capture_output=True, text=True, check=True).stdout
     intro = re.sub(r"^Prefer to read offline\?.*?(\n\n|\Z)", "", intro, flags=re.S | re.M)  # pointless inside the book
 
@@ -110,9 +113,11 @@ def main():
     parts.append("# Appendix\n\n")
     for name in ("disclaimer", "contributors", "compensation"):
         parts.append(render(ROOT / f"{name}.md", f"/{name}", 2, name))
+    parts.append("## License {#license}\n\nThis guide is released under the MIT License.\n\n```\n" + (ROOT / "LICENSE").read_text().strip() + "\n```\n\n")
 
-    book = "".join(parts)
-    assert "{%" not in book and "{:" not in book, "liquid or kramdown syntax leaked into the book"
+    book = "".join(parts).replace("{{ site.github.repository_url }}", repo)
+    leak = re.search(r".{0,40}({%|{{|{:).{0,40}", book)
+    assert not leak, f"liquid or kramdown syntax leaked into the book: {leak.group(0)!r}"
     (OUT / "book.md").write_text(book)
     print(f"wrote {OUT / 'book.md'}: {book.count(chr(10))} lines, {len(re.findall(r'^#', book, re.M))} headings")
     if "--hexo" in sys.argv:

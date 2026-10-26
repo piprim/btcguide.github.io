@@ -21,5 +21,5 @@ Thank you to all the hardware wallet developers who have sent me sample units, f
 ---
 
 Note that being on this page does **not** mean you endorse the recommendations given.
-[Pull requests](https://github.com/btcguide/btcguide.github.io) to improve this guide are always welcome.
+[Pull requests]({{ site.github.repository_url }}) to improve this guide are always welcome.
 
