@@ -1,0 +1,37 @@
+name: Book
+on:
+  push:
+    branches: [master]
+    paths: ['_pages/**', '_includes/**', 'index.html', '*.md', '_book/**', '.github/workflows/book.yml']
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 _book/build.py
+      - name: PDF
+        uses: docker://pandoc/latex:3.6
+        with:
+          args: _book/out/book.md -o _book/out/btcguide.pdf --toc --toc-depth=4 --resource-path=. -N --pdf-engine=xelatex --top-level-division=chapter -V documentclass=report -V colorlinks=true -V geometry:margin=2.5cm
+      - name: EPUB
+        uses: docker://pandoc/latex:3.6
+        with:
+          args: _book/out/book.md -o _book/out/btcguide.epub --toc --toc-depth=4 --resource-path=. --epub-chapter-level=2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: btcguide-book
+          path: _book/out/btcguide.*
+      - name: Publish to the rolling "book" release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: book
+          name: Latest PDF and EPUB
+          body: Built automatically from the latest master commit.
+          files: |
+            _book/out/btcguide.pdf
+            _book/out/btcguide.epub

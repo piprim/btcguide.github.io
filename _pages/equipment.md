@@ -9,7 +9,7 @@ Advanced users should be able to get other operating systems to work, but you wi
 
 The purpose of the computer will be to run [Specter-Desktop](https://github.com/cryptoadvance/specter-desktop), which will communicate blockchain information between [Bitcoin Core](https://bitcoin.org/en/full-node) and your hardware wallets for verification and signing.
 You will need an up-to-date Bitcoin Core Full Node, which can be running on this same computer or another.
-For more information about this, see the section called [Running Bitcoin](/running-bitcoin).
+For more information about this, see [Configure Bitcoin Node](/setup-computer/bitcoin-node).
 Bitcoin Core's initial block download takes a few days to sync, so we recommend you get started on that while you wait for your hardware wallets to arrive.
 
 #### Minimum Equipment to Buy:
