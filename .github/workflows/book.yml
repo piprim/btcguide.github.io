@@ -12,6 +12,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
+      - run: sudo apt-get install -y --no-install-recommends pandoc  # build.py converts the intro HTML with it
       - run: python3 _book/build.py
       - name: PDF
         uses: docker://pandoc/latex:3.6
