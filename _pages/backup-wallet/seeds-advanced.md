@@ -51,45 +51,7 @@ Two seeds at home in a `3-of-5` largely defeats the point of the larger quorum; 
 Keep `m - 1` keys outside your home region so an evacuation does not strand you.
 
 ## Estate Planning
-The hardest bitcoin security question for most bitcoiners to answer is "what happens to your bitcoin if you get hit by a bus?"
-Unfortunately, ensuring your bitcoin is recoverable by your loved ones **and nobody else** is a very challenging task.
-Multisig is the best tool we have to aid in this process.
-
-#### Give One (or More) Seeds to Someone You Trust
-**Anyone** who has a quorum of seeds _can_ spend your bitcoins! (even if they _don't_, it's important to know that they _can_)
-Depending on your personal situation, this may be a good thing (perhaps a spouse who you want to have complete access) or a bad thing (perhaps a financial manager who might be tempted to steal).
-
-Imagine you have a `2-of-3` scheme with seeds A, B, and C, all of which you initially control.
-You and your spouse want to always have access to your bitcoins, and you want your children to only get access in the event both you and your spouse are dead.
-
-You might do the following:
-
-* Give your family (you, your spouse, and your children) a copy of seed A. You/spouse store seed A at home or work and your children also store seed A somewhere that only they have access to (perhaps their home, work, or a safe-deposit box).
-* Put seed B in a safe-deposit box that only you and your spouse have access to.
-* Give seed C to your lawyer or other trusted-friend, to share with your children only after the death of you and your spouse. They will also share it with you if needed as part of an emergency recovery.
-
-As a result of this scheme:
-
-* You and your spouse always have regular access via seeds A & B, provided that you didn't lose your copy of seed A and that you can get into your safe-deposit box for seed B. If you lose seed A, you can ask your spouse or children for their copy as a backup. In the event of a problem retrieving seed B from the bank, you can ask your lawyer for assistance in recovery (as they have seed C). Keep in mind that if you lose *both* seeds A and B, your bitcoins are permanently lost.
-* In the event both you and your spouse die, your children can recover. They already have seed A, they just need seed B (from the bank) or seed C (from the lawyer). They can get access to seed B by contacting the bank (assuming you designated your children as the next-of-kin for your safe-deposit box) or seed C by contacting the lawyer.
-
-Of course, there are many tradeoffs/choices to be made:
-
-* If *both* your lawyer and the bank are dishonest (or compelled by a government order), they can collude to steal your bitcoin (they have access to seeds B and C)!
-* If *both* your lawyer and the bank are unlucky/negligent (perhaps they both suffer catastrophic fires in the same day!), you can be locked out of your bitcoin forever (seeds B and C are lost, as seed A alone is not enough to meet the `2-of-3` threshold).
-* If your children want to steal their inheritance before you die and are able to collude with (or trick) either the bank or the lawyer, they can get seed B or C and combine it with seed A (which they already have).
-* Your lawyer and your children may have some insight into your bitcoin transaction history, which could implicate how much bitcoin you have.
-
-Read more [here](/known-issues/seeds-and-privacy).
-
-[TODO]: Things are getting a little wordy/complicated starting here. I appreciate the conceptual discussion, but it might be misplaced in this spot and, as a layman user, my eyes might be glazing over. (feedback from @janoside)
-
-While not perfect, this is **far superior to single-key signature schemes**.
-
-Each of these situations can be addressed with a different quorum, giving different people different access, making more backups, etc.
-However, each of those choices will introduce new risks.
-
-You can quickly see that this scheme lends itself better to something like `3-of-5`, so you can have more entities/redundancy, and clearer organizational lines (less copies of keys floating around, so you can know for sure *who* signed each transaction).
+Moved to its own page: [Inheritance](/inheritance).
 
 ## Protect Your Backups
 

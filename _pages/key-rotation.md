@@ -32,4 +32,4 @@ Consider a small test amount first; with many unspent outputs this may take a fe
 
 Coins sent to one of the *old* wallet's addresses in the future would still land in the old wallet, so keep its public-key backup until you are sure nobody will reuse an old address.
 
-{% include next_steps.md %}
+{% include next_steps.md next_url="/inheritance" next_name="Inheritance" %}
