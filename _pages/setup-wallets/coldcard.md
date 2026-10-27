@@ -1,5 +1,6 @@
 ---
 title: Setup Coldcard
+description: Set up the Coldcard on battery power, update its firmware, generate a seed, and export its public key to Specter-Desktop by microSD card.
 ---
 
 _Read the [precautions](/equipment#choosing-the-second-hardware-wallet) first: update firmware before generating a seed, and prefer a seed from dice rolls._

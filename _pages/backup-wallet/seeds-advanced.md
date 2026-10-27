@@ -1,5 +1,6 @@
 ---
 title: Backup Seeds
+description: Weigh loss against theft, spread seeds across locations, plan for disasters and your estate, and protect backups with metal.
 ---
 
 ## Think Hard About Your Risks

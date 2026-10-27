@@ -1,5 +1,6 @@
 ---
 title: Passport
+description: Known issues with the Foundation Passport Prime, including the discontinued Passport Core, airgap limits, firmware that is not yet reproducible and account lock-in.
 ---
 
 Foundation's [Passport Prime](https://foundation.xyz/products/passport-prime) is a bitcoin hardware wallet with a secure element, a camera for QR codes and a microSD slot.

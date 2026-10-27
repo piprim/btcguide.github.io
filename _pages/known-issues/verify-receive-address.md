@@ -1,5 +1,6 @@
 ---
 title: Verifying a Receive Address
+description: The attack that makes verifying multisig receive addresses on a quorum of devices essential, and how to defend against it.
 ---
 
 ## Confirm You Control the Wallet

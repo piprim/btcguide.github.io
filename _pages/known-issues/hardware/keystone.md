@@ -1,5 +1,6 @@
 ---
 title: Keystone (formerly Cobo Vault)
+description: Known issues with the Keystone, including firmware that is not fully open source, an Android base, and some mild annoyances.
 ---
 
 #### Not Fully Open-Source

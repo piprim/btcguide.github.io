@@ -1,5 +1,6 @@
 ---
 title: Setup Keystone
+description: Verify the Keystone firmware hash on Linux, Windows or macOS before installing it, and generate your own seed phrase.
 ---
 
 #### Verify Your Firmware Before Installing

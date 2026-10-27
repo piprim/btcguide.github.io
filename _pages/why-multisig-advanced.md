@@ -1,5 +1,6 @@
 ---
 title: Why Multisig?
+description: Recent improvements that made multisig practical for non-expert users, and how Shamir's Secret Sharing Scheme compares.
 ---
 
 Multisig has always been amazing in theory, but in practice it has been too difficult for non-expert users.

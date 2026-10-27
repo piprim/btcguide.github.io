@@ -1,5 +1,6 @@
 ---
 title: Yeti
+description: Known issues with Yeti, which requires comfort with the command line.
 ---
 
 TODO: add content

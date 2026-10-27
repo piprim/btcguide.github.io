@@ -1,5 +1,6 @@
 ---
 title: Backup Public Keys
+description: Protect public key backups from water and fire, secure them against prying eyes, and understand what an extended public key reveals.
 ---
 
 

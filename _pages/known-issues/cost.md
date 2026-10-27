@@ -1,5 +1,6 @@
 ---
 title: Cost
+description: Multisig costs more in hardware and transaction fees. Here is why it is worth it for large amounts.
 ---
 
 While multisig is slightly more expensive, for securing large amounts of bitcoin it's well worth it.

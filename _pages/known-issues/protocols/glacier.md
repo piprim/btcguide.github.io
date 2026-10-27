@@ -1,5 +1,6 @@
 ---
 title: Glacier
+description: Known issues with the Glacier Protocol, including address reuse, P2SH and no BIP39 support.
 ---
 
 TODO: add content

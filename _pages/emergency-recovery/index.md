@@ -1,5 +1,6 @@
 ---
 title: Emergency Recovery
+description: What to do when a hardware wallet is lost or broken, by replacing it, signing with a Trezor, or using the paper seed in Sparrow.
 ---
 
 By default, you sign your `2-of-3` transactions on your `2` hardware wallets (Keystone (formerly Cobo Vault) and Coldcard) that [you previously configured](/setup-wallets/).

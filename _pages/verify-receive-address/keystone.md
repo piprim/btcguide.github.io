@@ -1,5 +1,6 @@
 ---
 title: Verify Receive Address on Keystone (formerly Cobo Vault)
+description: Verify a multisig receive address on the Keystone's large screen, and browse further addresses.
 ---
 
 Verifying receive addresses is one area where the Keystone wallet excels!

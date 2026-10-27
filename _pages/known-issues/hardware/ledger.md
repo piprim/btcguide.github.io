@@ -1,5 +1,6 @@
 ---
 title: Ledger
+description: Why Ledger is not recommended, with poor multisig support, no BIP174 and closed-source firmware.
 ---
 
 {% include hw/experts.md %}

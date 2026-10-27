@@ -1,5 +1,6 @@
 ---
 title: SeedSigner
+description: SeedSigner is a stateless DIY QR signer. The trade-offs are building it yourself, no physical security, and entering the seed every session.
 ---
 
 [SeedSigner](https://seedsigner.com/) is a stateless signing device you build yourself from a Raspberry Pi Zero, a camera and a small screen for around $50.

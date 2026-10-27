@@ -1,4 +1,4 @@
-import os, pathlib, re, subprocess
+import json, os, pathlib, re, subprocess
 
 import pytest
 
@@ -110,11 +110,13 @@ def test_sources():
 
 
 def test_git_stamp_clean_and_dirty():
-    date, sha = hexo.git_stamp([hexo.ROOT / "_pages/known-issues/hosted/casa.md"])
+    git = lambda *a: subprocess.run(["git", *a], cwd=hexo.ROOT, capture_output=True, text=True).stdout
+    dirty = git("status", "--porcelain")
+    f = next(hexo.ROOT / n for n in git("ls-files").split() if n not in dirty)  # a committed, unmodified file
+    date, sha = hexo.git_stamp([f])
     assert re.fullmatch(r"\d{4}-\d\d-\d\d \d\d:\d\d:\d\d", date) and re.fullmatch(r"[0-9a-f]{7,}", sha)
-    both = hexo.git_stamp([hexo.ROOT / "_pages/known-issues/hosted/casa.md", hexo.ROOT / "_includes/hosted/limited_hw.md"])
+    both = hexo.git_stamp([f, hexo.ROOT / "_includes/hosted/limited_hw.md"])
     assert both[0] >= date  # include touched later moves the stamp
-    f = hexo.ROOT / "_pages/known-issues/hosted/casa.md"
     orig = f.read_text()
     f.write_text(orig + "\n")
     try:
@@ -283,3 +285,13 @@ def test_blog_required_for_fr_targets(tmp_path):
         hexo.stale(tmp_path / "nope")
     with pytest.raises(SystemExit):
         hexo.fr_scaffold(tmp_path / "nope")
+
+
+def test_description_from_front_matter():
+    pages = hexo.guide_pages()
+    by = {p.url: p for p in pages}
+    for url in ("/equipment", "/known-issues/software/specter", ""):
+        p = by[url]
+        desc = hexo.read_page(p)[0]["description"]  # every page carries a hand-written one
+        assert 20 < len(desc) <= 160 and ": " not in desc and desc[0].isalpha()
+        assert f"description: {json.dumps(desc, ensure_ascii=False)}" in hexo.render_page(p, pages)

@@ -1,5 +1,6 @@
 ---
 title: Setup Computer Overview
+description: Overview of the watch-only computer that runs Bitcoin Core and Specter-Desktop, and why it needs less hardening than your hardware wallets.
 no_advanced_link: true
 ---
 

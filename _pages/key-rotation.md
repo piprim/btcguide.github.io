@@ -1,5 +1,6 @@
 ---
 title: Key Rotation
+description: When to replace a key in your multisig and how to move funds to the new wallet safely.
 no_advanced_link: true
 ---
 

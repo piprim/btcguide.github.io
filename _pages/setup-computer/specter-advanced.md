@@ -1,5 +1,6 @@
 ---
 title: Install Specter-Desktop
+description: Enable Merkle proofs against a lying node, build Specter-Desktop from source, and run it behind Tor.
 ---
 
 #### Enable Merkle Proofs

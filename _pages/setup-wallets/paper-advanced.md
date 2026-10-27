@@ -1,5 +1,6 @@
 ---
 title: Setup Paper Wallet
+description: Generate the paper wallet on a clean machine such as Tails, verify the seed with an independent script, and improve the airgap.
 ---
 
 ## Use a Clean Machine

@@ -1,5 +1,6 @@
 ---
 title: Advanced Single Sig
+description: Why single-sig with a passphrase is not a substitute for multisig, from firmware trust and bad random numbers to inheritance.
 ---
 
 A common response to multisig is: *"but what if I do single-sig with a passphrase, is that secure?"*

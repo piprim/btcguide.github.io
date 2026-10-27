@@ -1,5 +1,6 @@
 ---
 title: Backup Public Keys
+description: Save many copies of your public key set on USB, DVD, your computer and online, since spending needs all n public keys.
 ---
 
 To spend bitcoin, although only `m` seeds are required, you must also have _all_ `n` public keys.

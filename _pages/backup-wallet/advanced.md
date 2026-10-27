@@ -1,5 +1,6 @@
 ---
 title: Backup Wallet
+description: The privacy cost of keeping many copies of your extended public keys, and where to read more.
 ---
 
 #### Protect Your Privacy

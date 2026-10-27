@@ -1,5 +1,6 @@
 ---
 title: Hardware Wallet Vendors
+description: Which hardware wallets support BIP174 PSBTs and multisig well enough for this guide, as of 2024.
 ---
 
 As of 2024, most, but not all modern hardware wallets offer BIP174 support.  The following are known to work: Ledger, BitBox02, Trezor, Coldcard, KeepKey, Blockstream Jade, Keystone, as well as the Foundation Passport Wallet.

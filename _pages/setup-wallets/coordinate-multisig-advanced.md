@@ -1,5 +1,6 @@
 ---
 title: Coordinate Multisig
+description: Confirm that m, n and every public key in the multisig match what the Keystone, Coldcard, paper wallet and Specter-Desktop each show.
 ---
 
 ## Verify M, N, and Pubkeys

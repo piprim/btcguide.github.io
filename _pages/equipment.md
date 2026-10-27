@@ -1,5 +1,6 @@
 ---
 title: Equipment
+description: The hardware wallets, computer and Bitcoin Core node you need for a 2-of-3 multisig, with advice on choosing the second hardware wallet.
 ---
 
 TODO: add diagram showing how all these pieces interact.

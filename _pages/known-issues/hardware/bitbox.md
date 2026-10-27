@@ -1,5 +1,6 @@
 ---
 title: BitBox02
+description: The BitBox02 is a solid multisig signer, but with USB only and a closed secure chip firmware it is not on the recommended list.
 ---
 
 The [BitBox02](https://bitbox.swiss/) Bitcoin-only edition has a secure element, open-source firmware, and good multisig support including on-device registration of the cosigners.

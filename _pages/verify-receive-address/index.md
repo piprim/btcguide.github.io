@@ -1,5 +1,6 @@
 ---
 title: Verify Receive Address
+description: Why you must verify every new receive address on a quorum of your trusted displays before receiving bitcoin, and how to do it on each device.
 ---
 
 It is **essential** to be sure you control a bitcoin address before you use it to receive funds. Unfortunately, [verifying multisig receive addresses is slightly more complicated than in single-key setups](/known-issues/verify-receive-address).

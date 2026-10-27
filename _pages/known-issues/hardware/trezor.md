@@ -1,5 +1,6 @@
 ---
 title: Trezor
+description: Why Trezor is not recommended for ordinary users, from the Trezor Bridge privacy leak to limited BIP174 support and no physical security.
 ---
 
 {% include hw/experts.md %}

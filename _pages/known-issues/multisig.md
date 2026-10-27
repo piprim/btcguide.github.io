@@ -1,5 +1,6 @@
 ---
 title: Multisig
+description: The current downsides of multisig, from complexity and cost to limited hardware wallet support, with links to each.
 ---
 
 While multisig offers **unparalleled security** (see more in the [Why Multisig](/why-multisig) section), the benefits do not come for free.

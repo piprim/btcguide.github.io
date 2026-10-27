@@ -1,5 +1,6 @@
 ---
 title: Setup Coldcard
+description: Verify your Coldcard is genuine, add your own entropy to seed generation, and keep the airgap tight with the right power source and SD card habits.
 ---
 
 ## Verify Coldcard Authenticity

@@ -1,5 +1,6 @@
 ---
 title: Specter-Desktop
+description: Specter-Desktop stores wallet data in plain text despite its password. Encrypt your disk and backups, use a dedicated user, or move the data folder.
 ---
 
 [Specter-Desktop](https://github.com/cryptoadvance/specter-desktop) is the coordinator software this guide uses, and we still recommend it.

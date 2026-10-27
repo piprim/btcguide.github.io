@@ -1,5 +1,6 @@
 ---
 title: Setup Paper Wallet
+description: Generate the third key as a paper wallet by drawing seed words from a hat and computing the 24th word with SeedPicker, sharing only the xpub.
 ---
 
 For a video demo, check out [this example on Bitcoin Magazine](https://www.pscp.tv/BitcoinMagazine/1lDxLygXdvmKm?t=24m05s).

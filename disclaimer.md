@@ -1,5 +1,6 @@
 ---
 title: Disclaimer
+description: Legal disclaimer for the 10x Security Bitcoin Guide. The guide is general information, not legal, financial or tax advice, and comes with no warranties.
 ---
 
 ### 1. Information published on this website

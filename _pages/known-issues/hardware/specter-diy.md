@@ -1,5 +1,6 @@
 ---
 title: Specter DIY
+description: The Specter DIY is great for experts, but cannot be bought assembled and has no physical security.
 ---
 
 TODO: add more content

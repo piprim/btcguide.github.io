@@ -1,5 +1,6 @@
 ---
 title: Verify Receive Address on Coldcard
+description: Verify partially redacted multisig receive addresses with the Coldcard's Address Explorer while keeping the airgap.
 ---
 
 As of [Firmware Version 3.2.2](https://coldcardwallet.com/docs/upgrade) (January 14th, 2021) Coldcard's Address Explorer supports multisig, so you can verify (partially redacted) receive addresses while maintaining an airgap!

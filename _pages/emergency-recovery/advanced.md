@@ -1,5 +1,6 @@
 ---
 title: Emergency Recovery
+description: Precautions when recovering with a Trezor or Sparrow, including firmware updates, an airgap machine, moving the PSBT by QR and verifying downloads.
 ---
 
 ## Option A - Trezor Hardware Wallet

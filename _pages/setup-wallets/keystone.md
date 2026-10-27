@@ -1,5 +1,6 @@
 ---
 title: Setup Keystone (Formerly Cobo Vault)
+description: Upgrade the Keystone's firmware, generate its seed, and export its public key to Specter-Desktop by QR code.
 ---
 
 ## Upgrade Firmware

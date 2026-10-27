@@ -1,5 +1,6 @@
 ---
 title: Unchained Capital
+description: Known issues with Unchained Capital, including complex address verification, Trezor's limitations and 2-of-3 as the only option.
 ---
 
 

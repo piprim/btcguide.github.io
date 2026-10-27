@@ -1,5 +1,6 @@
 ---
 title: SeedPicker
+description: SeedPicker runs on a general purpose computer, which puts more security responsibility on you than a hardware wallet does.
 ---
 
 #### Software Wallets Are Dangerous

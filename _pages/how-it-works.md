@@ -1,5 +1,6 @@
 ---
 title: How it Works
+description: How a 2-of-3 multisig wallet works day to day, with two hardware wallets, a paper wallet and a watch-only computer running the coordinator.
 no_advanced_link: true
 ---
 

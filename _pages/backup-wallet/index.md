@@ -1,5 +1,6 @@
 ---
 title: Backup Wallet
+description: Back up both halves of your wallet, the three seed phrases and the public key sets, before receiving any bitcoin.
 ---
 
 Now that we've confirmed everything is working as expected, let's back it all up *before* receiving any bitcoin.

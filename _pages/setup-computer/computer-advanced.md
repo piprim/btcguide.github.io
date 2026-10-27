@@ -1,5 +1,6 @@
 ---
 title: Configure Computer
+description: Verify your Ubuntu download and encrypt your hard drive so that physical access to the computer reveals nothing about your wallet.
 ---
 
 #### Instructions to Verify Ubuntu Download

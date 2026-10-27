@@ -1,5 +1,6 @@
 ---
 title: Equipment
+description: Optional extras for your multisig setup, from tweezers and metal seed storage to a DVD drive, plus how to source hardware wallets safely.
 ---
 
 ## Recommended Additions

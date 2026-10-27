@@ -1,5 +1,6 @@
 ---
 title: Configure Bitcoin Node
+description: Install and configure a Bitcoin Core full node so Specter-Desktop can validate your payments, with options for remote nodes.
 ---
 
 Think of your bitcoin node as a fake bitcoin detector, it will confirm that bitcoin's consensus rules are being followed so that when you receive a payment you can validate that you are getting real bitcoins.

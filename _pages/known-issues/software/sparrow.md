@@ -1,5 +1,6 @@
 ---
 title: Sparrow
+description: Sparrow is a well maintained alternative coordinator that works with every wallet in this guide. Where it beats Specter-Desktop and where it falls short.
 ---
 
 [Sparrow](https://sparrowwallet.com/) is a free, open-source desktop wallet with first-class multisig support.

@@ -1,5 +1,6 @@
 ---
 title: KeepKey
+description: Why the KeepKey, a less maintained fork of Trezor with a single button, is not recommended for ordinary users.
 ---
 
 {% include hw/experts.md %}

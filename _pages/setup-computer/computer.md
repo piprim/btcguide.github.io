@@ -1,5 +1,6 @@
 ---
 title: Configure Computer
+description: Install Ubuntu on the computer that will run your multisig coordinator, and what level of caution this machine actually needs.
 ---
 
 #### A Note on Caution

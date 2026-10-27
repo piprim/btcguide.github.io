@@ -1,5 +1,6 @@
 ---
 title: Send Bitcoin
+description: Build a transaction in Specter-Desktop and sign it on two of your three wallets to spend from the multisig.
 ---
 
 In order to send bitcoin, you will need to sign on `2-of-3` of your hardware wallets.

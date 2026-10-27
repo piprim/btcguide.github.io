@@ -1,5 +1,6 @@
 ---
 title: Complexity
+description: Why complexity threatens security, why multisig is less complex than it looks, and the limited support for airdrops and message signing.
 ---
 
 

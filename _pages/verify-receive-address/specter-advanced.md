@@ -1,5 +1,6 @@
 ---
 title: Verify Receive Address on Specter
+description: Why the address Specter-Desktop shows cannot be trusted on its own, and how to check it on a quarantined machine.
 ---
 
 Your computer may be compromised with malware!

@@ -1,5 +1,6 @@
 ---
 title: Configure Bitcoin Node
+description: Verify or build Bitcoin Core from source, run your node over Tor, practice on testnet, and deploy a node on AWS.
 ---
 
 ## Verify Software

@@ -237,7 +237,8 @@ def render_page(p, pages):
     """The complete generated file for a page."""
     body = transform_body(p, raw_body(p))
     date, sha = git_stamp(sources(p))
-    return front_matter(p, date, sha, description(body) or display_title(p)) + GENERATED + "\n\n" + body + "\n---\n\n" + nav(p, pages) + "\n\n" + footer(p, date) + "\n"
+    desc = read_page(p)[0].get("description") or description(body) or display_title(p)
+    return front_matter(p, date, sha, desc) + GENERATED + "\n\n" + body + "\n---\n\n" + nav(p, pages) + "\n\n" + footer(p, date) + "\n"
 
 
 def out_path(p):

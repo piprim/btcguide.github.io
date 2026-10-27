@@ -1,5 +1,6 @@
 ---
 title: Inheritance
+description: How to make sure your heirs can find, understand and use your multisig backups, with a recovery letter, a worked example and a rehearsal.
 no_advanced_link: true
 ---
 

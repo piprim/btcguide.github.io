@@ -1,5 +1,6 @@
 ---
 title: Coordinate Multisig
+description: Create the 2-of-3 multisig wallet in Specter-Desktop from your three public keys, then register it on the Keystone and the Coldcard.
 ---
 
 Now that we have all your public key information in Specter-Desktop, we need to create your `2-of-3` multisig wallet.

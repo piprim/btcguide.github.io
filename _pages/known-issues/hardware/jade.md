@@ -1,5 +1,6 @@
 ---
 title: Blockstream Jade
+description: Known issues with the Blockstream Jade, including its blind oracle instead of a secure element, stateless mode and Liquid support.
 ---
 
 [Jade Plus](https://blockstream.com/jade/) is an inexpensive bitcoin signer with fully open-source hardware and firmware.

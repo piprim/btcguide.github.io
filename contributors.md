@@ -1,5 +1,6 @@
 ---
 title: Contributors
+description: The people behind the 10x Security Bitcoin Guide, its reviewers, and the wallet manufacturers who provided devices.
 ---
 
 

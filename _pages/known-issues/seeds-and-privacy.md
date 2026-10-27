@@ -1,5 +1,6 @@
 ---
 title: Seeds and Privacy
+description: What a thief who gets one seed can learn about your past multisig transactions, and two ways to limit it.
 ---
 
 In the event that an unauthorized third party gains access to a single seed and knows the corresponding bip32 path used, they will be able to calculate the child public keys that it would (likely) contribute to a multisig scheme.

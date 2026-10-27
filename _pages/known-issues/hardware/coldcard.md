@@ -1,5 +1,6 @@
 ---
 title: Coldcard
+description: Known issues with the Coldcard, including the 2021 to 2026 weak seed generation bug, the SD card airgap, small screen and non-reproducible builds.
 ---
 
 #### Weak Seed Generation Bug (2021 to 2026)

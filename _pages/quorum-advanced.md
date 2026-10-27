@@ -1,5 +1,6 @@
 ---
 title: Pick Quorum
+description: How to pick m and n for your multisig, and why 1-of-n, 2-of-2, 2-of-4 and large quorums are worse than 2-of-3 or 3-of-5.
 ---
 
 ## Picking Your M and N

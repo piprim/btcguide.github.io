@@ -1,5 +1,6 @@
 ---
 title: Electrum
+description: Why this guide uses Specter-Desktop rather than Electrum, with its slow releases, limited BIP39 support, default privacy leaks and confusing UX.
 ---
 
 In theory, it would be possible to do everything described in this guide using [Electrum](https://electrum.org/) instead of [Specter-Desktop](https://github.com/cryptoadvance/specter-desktop).

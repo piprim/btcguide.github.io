@@ -1,5 +1,6 @@
 ---
 title: Pick Quorum
+description: Why this guide recommends a 2-of-3 multisig quorum as the balance between security and usability for most people.
 ---
 
 The main theme of this guide is to create fault tolerance by **avoiding a single point of failure**.

@@ -1,5 +1,6 @@
 ---
 title: Verify Receive Address
+description: When a less secure verification is acceptable, and how to verify addresses offline with Electrum, Caravan or a printed address list.
 ---
 
 **It is essential to be sure you control a bitcoin address before you receive funds on it, as this is a common attack that leads to losses**.

@@ -1,5 +1,6 @@
 ---
 title: Verify Receive Address with Specter-Desktop
+description: Find a receive address for your multisig wallet in Specter-Desktop before checking it on your hardware wallets.
 ---
 
 Verification is easy!

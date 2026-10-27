@@ -1,5 +1,6 @@
 ---
 title: Setup Hardware Wallet Overview
+description: Overview of the 2-of-3 setup, with a Keystone, a Coldcard and a paper wallet, and the order in which to configure them.
 ---
 
 #### Overview

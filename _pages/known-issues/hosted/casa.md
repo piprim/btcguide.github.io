@@ -1,5 +1,6 @@
 ---
 title: Casa
+description: Known issues with Casa, including unverified cosigner wallets, a key on a phone, outdated firmware, hard sovereign recovery and seedless design.
 ---
 
 {% include hosted/limited_hw.md %}

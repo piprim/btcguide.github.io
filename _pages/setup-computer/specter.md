@@ -1,5 +1,6 @@
 ---
 title: Install Specter-Desktop
+description: Download Specter-Desktop and connect it to your Bitcoin Core node. Sparrow is a fully supported alternative coordinator.
 ---
 
 This guide uses Specter-Desktop as the coordinator, the software that combines your hardware wallets into one multisig wallet.

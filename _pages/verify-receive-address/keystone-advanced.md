@@ -1,5 +1,6 @@
 ---
 title: Verify Receive Address on Keystone (formerly Cobo Vault)
+description: Reconfirm the m-of-n quorum and cosigner information on the Keystone each time you transact.
 ---
 
 While verifying the address is a good start, ideally you also want to reconfirm the `m-of-n` quorum info each time you transact.

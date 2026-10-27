@@ -1,5 +1,6 @@
 ---
 title: Backup Seeds
+description: Back up each seed phrase on paper, keep them in separate locations with the right companion data, and check them yearly.
 ---
 
 Remember that anyone who gets access to a quorum of your seeds (`m` in `m-of-n`) as well as your much less secure [public key information](/backup-wallet/public-keys) can steal _all_ of your bitcoin, so **do not store store a quorum of your seeds in one place!**

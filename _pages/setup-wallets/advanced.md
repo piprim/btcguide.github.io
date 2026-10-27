@@ -1,5 +1,6 @@
 ---
 title: Setup Hardware Wallet Overview
+description: Update firmware before loading any funds, and whether to use a passphrase on each hardware wallet.
 ---
 
 #### Update Your Firmware

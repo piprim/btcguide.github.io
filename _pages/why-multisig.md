@@ -1,5 +1,6 @@
 ---
 title: Why Multisig?
+description: Why being your own bank with a single key is so hard, and how a multisig quorum lets you make mistakes without losing your bitcoin.
 ---
 
 

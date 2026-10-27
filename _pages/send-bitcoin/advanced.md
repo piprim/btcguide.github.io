@@ -1,5 +1,6 @@
 ---
 title: Send Bitcoin
+description: How change addresses work in multisig, signing on the Coldcard via SD card, and inspecting a signed transaction before broadcasting.
 ---
 
 #### Complexity of Multisig Here
