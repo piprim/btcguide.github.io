@@ -2,6 +2,9 @@
 title: Install Specter-Desktop
 ---
 
+This guide uses Specter-Desktop as the coordinator, the software that combines your hardware wallets into one multisig wallet.
+[Sparrow](https://sparrowwallet.com/) is a fully supported alternative, more widely used and more actively maintained today; see its [known issues](/known-issues/software/sparrow) for a comparison.
+Everything that follows works with either.
 
 #### Download
 Grab the latest release of the `Specter-Desktop` app:  
