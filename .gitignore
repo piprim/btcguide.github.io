@@ -5,3 +5,5 @@ Gemfile.lock
 .DS_Store
 *.swp
 _book/out/
+__pycache__/
+.pytest_cache/

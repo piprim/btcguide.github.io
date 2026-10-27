@@ -1,6 +1,6 @@
 # Publishing the guide as Hexo pages on blog.piprime.fr
 
-Design spec, 2026-10-26. Not yet implemented. Extends `_book/build.py`.
+Design spec, 2026-10-26. Implemented by `_book/hexo.py`, which reuses helpers from `_book/build.py`.
 
 ## Intent
 
