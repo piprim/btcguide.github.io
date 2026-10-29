@@ -6,6 +6,7 @@ defaults:
 
 exclude: 
   - dictionary.dic
+  - fr  # French sources, read only by _book/ (see _book/FRENCH-SPEC.md)
 
 # https://github.com/jekyll/jekyll/issues/920#issuecomment-315503935
 collections:

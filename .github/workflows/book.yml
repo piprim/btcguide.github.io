@@ -2,7 +2,7 @@ name: Book
 on:
   push:
     branches: [master]
-    paths: ['_pages/**', '_includes/**', 'index.html', '*.md', '_book/**', '.github/workflows/book.yml']
+    paths: ['_pages/**', '_includes/**', 'index.html', '*.md', 'fr/**', '_book/**', '.github/workflows/book.yml']
   workflow_dispatch:
 
 jobs:
@@ -22,10 +22,24 @@ jobs:
         uses: docker://pandoc/latex:3.6
         with:
           args: _book/out/book.md -o _book/out/btcguide.epub --toc --toc-depth=4 --resource-path=. --epub-chapter-level=2
+      # French: skipped with a warning while fr/index.html is missing; a TOC mismatch fails the job (see _book/FRENCH-SPEC.md)
+      - run: python3 _book/build.py fr
+      - name: PDF (fr)
+        if: hashFiles('_book/out/fr/book.md') != ''
+        uses: docker://pandoc/latex:3.6
+        with:
+          args: _book/out/fr/book.md -o _book/out/fr/btcguide-fr.pdf --toc --toc-depth=4 --resource-path=. -N --pdf-engine=xelatex --top-level-division=chapter -V documentclass=report -V colorlinks=true -V geometry:margin=2.5cm
+      - name: EPUB (fr)
+        if: hashFiles('_book/out/fr/book.md') != ''
+        uses: docker://pandoc/latex:3.6
+        with:
+          args: _book/out/fr/book.md -o _book/out/fr/btcguide-fr.epub --toc --toc-depth=4 --resource-path=. --epub-chapter-level=2
       - uses: actions/upload-artifact@v4
         with:
           name: btcguide-book
-          path: _book/out/btcguide.*
+          path: |
+            _book/out/btcguide.*
+            _book/out/fr/btcguide-fr.*
       - name: Publish to the rolling "book" release
         if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
@@ -36,3 +50,5 @@ jobs:
           files: |
             _book/out/btcguide.pdf
             _book/out/btcguide.epub
+            _book/out/fr/btcguide-fr.pdf
+            _book/out/fr/btcguide-fr.epub

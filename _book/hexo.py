@@ -5,15 +5,12 @@ One Hexo page per guide page under PREFIX, same relative URL as on the Jekyll
 site; media under MEDIA. Design and decisions: _book/HEXO-PAGES-SPEC.md.
 
 Usage: python3 _book/hexo.py [pages]            -> _book/out/hexo/{page,media}/btcguide/
-       python3 _book/hexo.py fr-scaffold BLOG   -> French skeletons for untranslated pages
-       python3 _book/hexo.py stale BLOG         -> French pages behind their English source (exit 1)
 """
 import dataclasses, datetime, json, os, pathlib, re, shutil, subprocess, sys
 
 import build as book
-from build import ROOT, OUT, INCLUDE, page_file, advanced_of
+from build import ROOT, OUT, INCLUDE, PREFIX, STRINGS, page_file, advanced_of, localized, include_file, toc_mismatch, drop_offline_paragraph, slugify
 
-PREFIX = "/btcguide"  # URL prefix of the guide on the blog
 MEDIA = "/media/btcguide"
 HEXO_OUT = OUT / "hexo"
 REPO = os.environ.get("REPO", "https://github.com/piprim/btcguide.github.io")
@@ -26,16 +23,24 @@ class Page:
     url: str  # site URL without trailing slash: "" home, "/setup-wallets" for index.md, "/license"
     file: pathlib.Path
     title: str  # raw front-matter title
+    lang: str = "en"
 
 
-def slugify(text):
-    """kramdown's rule: keep letters, digits, spaces and dashes; spaces -> dashes; lowercase; drop leading non-letters."""
-    text = re.sub(r"[^a-zA-Z0-9 -]", "", text).replace(" ", "-").lower()
-    return re.sub(r"^[^a-z]+", "", text)
+def toc_html(lang="en"):
+    return localized(lang, ROOT / "index.html").read_text().split("<hr>", 1)[1]
 
 
-def toc_html():
-    return (ROOT / "index.html").read_text().split("<hr>", 1)[1]
+def prefix(lang):
+    return PREFIX if lang == "en" else "/fr" + PREFIX
+
+
+def src_file(p):
+    """The file actually rendered: the lang counterpart of the English file (LICENSE is never translated)."""
+    return p.file if p.url == "/license" else localized(p.lang, p.file)
+
+
+def is_stub(p):
+    return p.lang != "en" and not src_file(p).exists()
 
 
 def front_title(f):
@@ -43,21 +48,25 @@ def front_title(f):
     return m.group(1).strip()
 
 
-def guide_pages():
-    """Walk order: home, each TOC page followed by its advanced sibling, then the root pages and the license."""
-    pages = [Page("", ROOT / "index.html", "10x Security Bitcoin Guide")]
-    for kind, _, url, _ in book.walk_toc(toc_html()):
+def guide_pages(lang="en"):
+    """Walk order: home, each TOC page followed by its advanced sibling, then the root pages and the license.
+    Structure always comes from the English tree; a lang page's title is its own, else the lang TOC label, else the English title."""
+    def page(url, f, label=None):
+        lf = localized(lang, f)
+        return Page(url, f, front_title(lf) if lf.exists() else label or front_title(f), lang)
+    pages = [Page("", ROOT / "index.html", front_title(localized(lang, ROOT / "index.html")), lang)]
+    for (kind, _, url, _), (_, label, _, _) in zip(book.walk_toc(toc_html()), book.walk_toc(toc_html(lang))):
         if kind != "page":
             continue
         f = page_file(url)
         url = url.rstrip("/")
-        pages.append(Page(url, f, front_title(f)))
+        pages.append(page(url, f, label))
         adv = advanced_of(f)
         if adv.exists():
-            pages.append(Page(url + ("/advanced" if f.name == "index.md" else "-advanced"), adv, front_title(adv)))
+            pages.append(page(url + ("/advanced" if f.name == "index.md" else "-advanced"), adv))
     for name in ROOT_PAGES:
-        pages.append(Page("/" + name, ROOT / f"{name}.md", front_title(ROOT / f"{name}.md")))
-    pages.append(Page("/license", ROOT / "LICENSE", "License"))
+        pages.append(page("/" + name, ROOT / f"{name}.md"))
+    pages.append(Page("/license", ROOT / "LICENSE", STRINGS[lang]["license"], lang))
     return pages
 
 
@@ -67,8 +76,9 @@ def is_advanced(p):
 
 def display_title(p):
     """Title as _layouts/default.html shows it."""
-    pre = "Known Issues: " if p.url.startswith("/known-issues/") else ""
-    return pre + p.title + (" » Advanced Considerations" if is_advanced(p) else "")
+    S = STRINGS[p.lang]
+    pre = S["known_issues"] if p.url.startswith("/known-issues/") else ""
+    return pre + p.title + (S["advanced"] if is_advanced(p) else "")
 
 
 def page_dir(p):
@@ -78,13 +88,15 @@ def page_dir(p):
     return p.url.rsplit("/", 1)[0] + "/"
 
 
-def hexo_url(path, frag=""):
-    return PREFIX + path + "/" + (f"#{frag}" if frag else "")
+def hexo_url(path, frag="", lang="en"):
+    return prefix(lang) + path + "/" + (f"#{frag}" if frag else "")
 
 
 def read_page(p):
-    """(front matter as a dict of its `key: value` lines, raw body)."""
-    text = p.file.read_text()
+    """(front matter as a dict of its `key: value` lines, raw body); a stub has neither."""
+    if is_stub(p):
+        return {}, ""
+    text = src_file(p).read_text()
     m = re.match(r"---\n(.*?)\n---\n", text, re.S)
     if not m:
         return {}, text
@@ -92,33 +104,33 @@ def read_page(p):
 
 
 def sources(p):
-    """Every file the page is rendered from: the page plus its includes (next_steps.md is hard-coded here)."""
+    """Every file the page is rendered from: the page plus its includes (next_steps.md is hard-coded here).
+    A stub is rendered from nothing, so it is stamped from its English page."""
+    if is_stub(p):
+        return [p.file]
     if not p.url:
-        return [p.file] + [ROOT / f"{n}.md" for n in ROOT_PAGES]
+        roots = [localized(p.lang, ROOT / f"{n}.md") for n in ROOT_PAGES]
+        return [src_file(p)] + [r for r in roots if r.exists()]
     if p.url == "/license":
         return [p.file]
     names = dict.fromkeys(n for n in INCLUDE.findall(read_page(p)[1]) if n != "next_steps.md")
-    return [p.file] + [ROOT / "_includes" / n for n in names]
-
-
-ADVANCED_BOX = ("> **Advanced Considerations**\n>\n> Comfortable with the concepts in this step? "
-                "Read the [advanced considerations]({adv}) that can potentially improve your security here.\n")
-NEXT_LINK = "\n---\n\n» Next Section: [{name}]({url})\n"
+    return [src_file(p)] + [localized(p.lang, ROOT / "_includes" / n) for n in names]
 
 
 def expand_includes(p, body):
     """Transform 1: expand includes; next_steps.md keeps its semantics (advanced box, next link)."""
     fm = read_page(p)[0]
+    S = STRINGS[p.lang]
 
     def sub(mm):
         if mm.group(1) != "next_steps.md":
-            return (ROOT / "_includes" / mm.group(1)).read_text()
+            return include_file(p.lang, mm.group(1), src_file(p)).read_text()
         out = ""
         if not is_advanced(p) and fm.get("no_advanced_link") != "true":
-            out += ADVANCED_BOX.format(adv=p.url + ("/advanced" if p.file.name == "index.md" else "-advanced"))
+            out += S["advanced_box"].format(adv=p.url + ("/advanced" if p.file.name == "index.md" else "-advanced"))
         m = re.search(r'next_url="([^"]+)"\s+next_name="([^"]+)"', mm.group(0))
         if m:
-            out += NEXT_LINK.format(url=m.group(1), name=m.group(2))
+            out += S["next_link"].format(url=m.group(1), name=m.group(2))
         return out
     return INCLUDE.sub(sub, body)
 
@@ -133,14 +145,22 @@ def transform_body(p, body):
     parts = fence_split(body)
     fences = parts[1::2]
     text = "".join(part if i % 2 == 0 else f"\x00{i // 2}\x00" for i, part in enumerate(parts))
+    en_ids = None
+    if p.lang != "en" and not is_stub(p):  # translated headings also get the English anchor, so identical links still resolve
+        en_p = dataclasses.replace(p, lang="en")
+        en_prose = "".join(fence_split(raw_body(en_p))[::2])
+        en_ids = iter(book.english_anchors(text, src_file(p), en_prose, "hexo.py"))
     # 2. Liquid
     text = re.sub(r"{%.*?%}", "", text, flags=re.S)
     text = text.replace("{{ site.github.repository_url }}", REPO).replace("{{ page.title }}", p.title)
     text = re.sub(r"^\[TODO\]:.*\n?", "", text, flags=re.M)  # maintainer notes, invisible on the site too
-    text = re.sub(r"<(/[a-z][^>\s]*)>", lambda mm: f"[{mm.group(1)}]({hexo_url(book.site_path(mm.group(1), '/')[0])})", text)  # bare </foo> autolinks, before any <a> of ours exists
+    text = re.sub(r"<(/[a-z][^>\s]*)>", lambda mm: f"[{mm.group(1)}]({hexo_url(book.site_path(mm.group(1), '/')[0], lang=p.lang)})", text)  # bare </foo> autolinks, before any <a> of ours exists
     # 3. headings: top-most at h2, explicit anchors
     text = book.normalize_headings(text, 1)
-    text = re.sub(r"^(#+) (.+?)[ \t]*$", lambda m: f'<a id="{slugify(m.group(2))}"></a>\n\n{m.group(1)} {m.group(2)}', text, flags=re.M)
+    def anchors(m):
+        ids = dict.fromkeys([slugify(m.group(2))] + ([next(en_ids)] if en_ids else []))
+        return "".join(f'<a id="{i}"></a>\n\n' for i in ids) + f"{m.group(1)} {m.group(2)}"
+    text = book.HEADING.sub(anchors, text)
     # 4. kramdown attributes: width survives as an <img>, the rest is dropped
     text = re.sub(r'!\[([^\]]*)\]\(([^)\s]+)\)\s*\{:[^}]*?width="(\d+%)"[^}]*\}', r'<img src="\2" alt="\1" width="\3">', text)
     text = re.sub(r"{:[^}]*}", "", text)
@@ -149,11 +169,12 @@ def transform_body(p, body):
 
     def link(mm):
         target = mm.group(1)
-        sp = None if target.startswith(MEDIA + "/") else book.site_path(target, page_dir(p))
+        done = (MEDIA + "/", PREFIX + "/", "/fr" + PREFIX + "/")  # media, and a stub's link to its English page, are blog URLs already
+        sp = None if target.startswith(done) else book.site_path(target, page_dir(p))
         if sp is None:
             return mm.group(0)
         path, frag = sp
-        return f"](#{slugify(frag)})" if path == "#" else f"]({hexo_url(path, slugify(frag) if frag else '')})"
+        return f"](#{slugify(frag)})" if path == "#" else f"]({hexo_url(path, slugify(frag) if frag else '', p.lang)})"
     text = re.sub(r"\]\(([^)\s]+)\)", link, text)
     # 7. a page must not start with a horizontal rule
     text = re.sub(r"\A(\s*-{3,}\s*\n)+", "", text)
@@ -191,45 +212,50 @@ def description(body):
 
 def nav(p, pages):
     i = pages.index(p)
-    prev = f"← [{display_title(pages[i - 1])}]({hexo_url(pages[i - 1].url)})" if i else ""
-    nxt = f"[{display_title(pages[i + 1])}]({hexo_url(pages[i + 1].url)}) →" if i + 1 < len(pages) else ""
+    prev = f"← [{display_title(pages[i - 1])}]({hexo_url(pages[i - 1].url, lang=p.lang)})" if i else ""
+    nxt = f"[{display_title(pages[i + 1])}]({hexo_url(pages[i + 1].url, lang=p.lang)}) →" if i + 1 < len(pages) else ""
     return " · ".join(x for x in (prev, nxt) if x)
 
 
 def footer(p, date):
-    rel = p.file.relative_to(ROOT)
-    return f"Source: [{rel}]({REPO}/blob/master/{rel}) · [MIT License]({hexo_url('/license')}) · Last updated {date[:10]}"
+    S = STRINGS[p.lang]
+    rel = sources(p)[0].relative_to(ROOT)
+    return f"{S['source']}: [{rel}]({REPO}/blob/master/{rel}) · [{S['mit']}]({hexo_url('/license', lang=p.lang)}) · {S['updated']} {date[:10]}"
 
 
-def home_body():
-    """Intro of index.html via pandoc, then the two tables of contents, then the PDF/EPUB links."""
-    intro_html = re.sub(r"^---.*?---\n", "", (ROOT / "index.html").read_text().split("<hr>", 1)[0], flags=re.S)
+def home_body(lang="en"):
+    """Intro of the lang index.html via pandoc, then the two tables of contents, then the PDF/EPUB links."""
+    S = STRINGS[lang]
+    intro_html = re.sub(r"^---.*?---\n", "", localized(lang, ROOT / "index.html").read_text().split("<hr>", 1)[0], flags=re.S)
     intro = subprocess.run(["pandoc", "-f", "html", "-t", "gfm", "--wrap=none"], input=intro_html.replace("{{ site.github.repository_url }}", REPO),
                            capture_output=True, text=True, check=True).stdout
-    intro = re.sub(r"^Prefer to read offline\?.*?(\n\n|\Z)", "", intro, flags=re.S | re.M)  # replaced by the Offline copies section
-    lines = ["## Table of Contents"]
-    for kind, text, url, depth in book.walk_toc(toc_html()):
+    intro = drop_offline_paragraph(intro)  # replaced by the Offline copies section
+    lines = [f"## {S['toc']}"]
+    for kind, text, url, depth in book.walk_toc(toc_html(lang)):
         if kind == "section":
             lines += ["", f"### {text}", ""]
         else:
             lines.append("  " * (depth - 1) + (f"- [{text}]({url})" if url else f"- {text}"))
-    lines += ["", "## Offline copies", "", f"- [PDF]({REPO}/releases/download/book/btcguide.pdf)", f"- [EPUB]({REPO}/releases/download/book/btcguide.epub)", ""]
+    stem = "btcguide" if lang == "en" else f"btcguide-{lang}"
+    lines += ["", f"## {S['offline']}", "", f"- [PDF]({REPO}/releases/download/book/{stem}.pdf)", f"- [EPUB]({REPO}/releases/download/book/{stem}.epub)", ""]
     return intro.strip() + "\n\n" + "\n".join(lines)
 
 
 def raw_body(p):
-    """Pre-transform Markdown of a page, includes expanded."""
+    """Pre-transform Markdown of a page, includes expanded; a stub is the not-yet-translated notice linking the English page."""
+    if is_stub(p):
+        return STRINGS[p.lang]["untranslated"].format(url=hexo_url(p.url)) + "\n"
     if not p.url:
-        return home_body()
+        return home_body(p.lang)
     if p.url == "/license":
-        return "This guide is released under the MIT License.\n\n```\n" + p.file.read_text().strip() + "\n```\n"
+        return STRINGS[p.lang]["license_lead"] + "\n\n```\n" + p.file.read_text().strip() + "\n```\n"
     return expand_includes(p, read_page(p)[1])
 
 
 def front_matter(p, date, sha, desc):
     src = " ".join(str(s.relative_to(ROOT)) for s in sources(p))
     q = lambda s: json.dumps(s, ensure_ascii=False)
-    return (f"---\ntitle: {q(display_title(p))}\ndate: {date}\nlang: en\ncomments: false\ntree_view: true\n"
+    return (f"---\ntitle: {q(display_title(p))}\ndate: {date}\nlang: {p.lang}\ncomments: false\ntree_view: true\n"
             f"description: {q(desc)}\nbtcguide_source: {q(src)}\nbtcguide_commit: {sha}\n---\n")
 
 
@@ -242,7 +268,7 @@ def render_page(p, pages):
 
 
 def out_path(p):
-    return HEXO_OUT / "page" / PREFIX.strip("/") / p.url.lstrip("/") / "index.md"
+    return HEXO_OUT / "page" / prefix(p.lang).strip("/") / p.url.lstrip("/") / "index.md"
 
 
 def check(rendered, media_dir, expected_count):
@@ -270,8 +296,8 @@ def check(rendered, media_dir, expected_count):
             if target.startswith(MEDIA + "/"):
                 if not (media_dir / target[len(MEDIA) + 1:]).is_file():
                     where(f"missing media {target}")
-            elif target.startswith(PREFIX + "/"):
-                path, _, frag = target[len(PREFIX):].partition("#")
+            elif target.startswith(PREFIX + "/") or target.startswith("/fr" + PREFIX + "/"):  # a stub links its English page
+                path, _, frag = target[target.index(PREFIX) + len(PREFIX):].partition("#")
                 path = path.rstrip("/")
                 if path not in rendered:
                     where(f"dead link {target}")
@@ -285,103 +311,33 @@ def check(rendered, media_dir, expected_count):
 
 
 def build():
-    """Write pages and media to HEXO_OUT and run the checks; exit 1 on any failure."""
+    """Write pages (English, then French when fr/index.html exists) and media to HEXO_OUT and run the checks; exit 1 on any failure."""
     if HEXO_OUT.exists():
         shutil.rmtree(HEXO_OUT)
     for sub in ("img", "guide"):
         shutil.copytree(ROOT / "assets" / sub, HEXO_OUT / "media" / PREFIX.strip("/") / sub)
-    pages = guide_pages()
-    rendered = {p.url: render_page(p, pages) for p in pages}
-    for p in pages:
-        out_path(p).parent.mkdir(parents=True, exist_ok=True)
-        out_path(p).write_text(rendered[p.url])
-    fails = check(rendered, HEXO_OUT / "media" / PREFIX.strip("/"), len(pages))
-    if fails:
-        sys.exit("hexo.py: checks failed\n  " + "\n  ".join(fails))
-    print(f"wrote {len(pages)} pages to {HEXO_OUT.relative_to(ROOT)}")
-
-
-def split_generated(text):
-    """Front matter dict (JSON-quoted values decoded) and body, without the GENERATED line. Works on French pages too."""
-    m = re.match(r"---\n(.*?)\n---\n", text, re.S)
-    fm = {}
-    for k, v in re.findall(r"^(\w+):\s*(.*?)\s*$", m.group(1), re.M):
-        fm[k] = json.loads(v) if v.startswith('"') else v
-    body = text[m.end():]
-    if body.startswith(GENERATED + "\n"):
-        body = body[len(GENERATED) + 1:].lstrip("\n")
-    return fm, body
-
-
-def fr_links(body):
-    return body.replace(f"]({PREFIX}/", f"](/fr{PREFIX}/").replace(f'href="{PREFIX}/', f'href="/fr{PREFIX}/')
-
-
-FR_NOTICE = "> *Cette page n'est pas encore traduite. Le texte anglais suit.*"
-
-
-def fr_scaffold(blog):
-    """Create fr/btcguide/<path>/index.md for every English page without one. Never overwrites. Returns the created paths."""
-    if not blog.is_dir():
-        sys.exit(f"hexo.py: {blog} is not a directory (pass BLOG=<path to hexo/source>)")
-    created = []
-    en_root = HEXO_OUT / "page" / PREFIX.strip("/")
-    for en in sorted(en_root.rglob("index.md")):
-        fr = blog / "fr" / PREFIX.strip("/") / en.relative_to(en_root)
-        if fr.exists():
-            continue
-        fm, body = split_generated(en.read_text())
-        q = lambda s: json.dumps(s, ensure_ascii=False)
-        fr.parent.mkdir(parents=True, exist_ok=True)
-        fr.write_text(f"---\ntitle: {q(fm['title'])}\ndate: {fm['date']}\nlang: fr\ncomments: false\ntree_view: true\n"
-                      f"description: {q(fm['description'])}\ntranslated_from: {fm['btcguide_commit']}\n---\n\n{FR_NOTICE}\n\n{fr_links(body)}")
-        print(f"created {fr}")
-        created.append(fr)
-    print(f"{len(created)} French pages scaffolded")
-    return created
-
-
-def stale(blog):
-    """Report French pages whose translated_from is behind the English btcguide_commit. Returns the exit code."""
-    if not blog.is_dir():
-        sys.exit(f"hexo.py: {blog} is not a directory (pass BLOG=<path to hexo/source>)")
-    en_root = HEXO_OUT / "page" / PREFIX.strip("/")
-    fr_root = blog / "fr" / PREFIX.strip("/")
-    code = 0
-    for fr in sorted(fr_root.rglob("index.md")):
-        rel = fr.relative_to(blog)
-        fm, body = split_generated(fr.read_text())
-        en = en_root / fr.relative_to(fr_root)
-        if not en.exists():
-            print(f"ORPHAN {rel}: no English page")
-            code = 1
-            continue
-        en_fm = split_generated(en.read_text())[0]
-        a, b = fm.get("translated_from", "none"), en_fm["btcguide_commit"]
-        if a != b:
-            code = 1
-            print(f"STALE {rel}: {a} -> {b}")
-            if a != "none":
-                log = subprocess.run(["git", "log", "--oneline", f"{a.removesuffix('-dirty')}..{b.removesuffix('-dirty')}", "--", *en_fm["btcguide_source"].split()],
-                                     cwd=ROOT, capture_output=True, text=True)
-                print("\n".join("  " + l for l in log.stdout.splitlines()) if log.returncode == 0 else f"  (cannot show history: {log.stderr.strip().splitlines()[0]})")
-                if a.endswith("-dirty") or b.endswith("-dirty"):
-                    print("  (working tree had uncommitted changes)")
-        n = body.count(f"]({PREFIX}/") + body.count(f'href="{PREFIX}/')
-        if n:
-            print(f"WARN {rel}: {n} link(s) to {PREFIX}/ should be /fr{PREFIX}/")
-    if code == 0:
-        print("all French pages up to date")
-    return code
+    langs = ["en"]
+    if localized("fr", ROOT / "index.html").exists():
+        if msg := toc_mismatch(toc_html(), toc_html("fr")):
+            sys.exit("hexo.py: " + msg)
+        langs.append("fr")
+    else:
+        print("hexo.py: fr/index.html missing, French pages skipped", file=sys.stderr)
+    for lang in langs:
+        pages = guide_pages(lang)
+        rendered = {p.url: render_page(p, pages) for p in pages}
+        for p in pages:
+            out_path(p).parent.mkdir(parents=True, exist_ok=True)
+            out_path(p).write_text(rendered[p.url])
+        fails = check(rendered, HEXO_OUT / "media" / PREFIX.strip("/"), len(pages))
+        if fails:
+            sys.exit(f"hexo.py: {lang} checks failed\n  " + "\n  ".join(fails))
+        print(f"wrote {len(pages)} {'English' if lang == 'en' else 'French'} pages to {HEXO_OUT.relative_to(ROOT)}")
 
 
 def main(argv):
     if not argv or argv == ["pages"]:
         build()
-    elif argv[0] == "fr-scaffold" and len(argv) == 2:
-        fr_scaffold(pathlib.Path(argv[1]))
-    elif argv[0] == "stale" and len(argv) == 2:
-        sys.exit(stale(pathlib.Path(argv[1])))
     else:
         sys.exit(__doc__)
 

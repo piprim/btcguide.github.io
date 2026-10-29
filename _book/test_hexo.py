@@ -1,4 +1,4 @@
-import json, os, pathlib, re, subprocess
+import json, os, pathlib, re, shutil, subprocess
 
 import pytest
 
@@ -175,8 +175,8 @@ def test_build_writes_tree(built):
     assert (built / "page/btcguide/known-issues/hardware/coldcard/index.md").exists()
     assert (built / "media/btcguide/guide/bip39_wordlist.pdf").exists()
     assert (built / "media/btcguide/img/setup-paper-seedpicker-example-output.png").exists()
-    assert len(list(built.glob("page/**/index.md"))) == len(hexo.guide_pages())
-    for f in built.glob("page/**/index.md"):
+    assert len(list(built.glob("page/btcguide/**/index.md"))) == len(hexo.guide_pages())
+    for f in built.glob("page/btcguide/**/index.md"):
         assert f.read_text().splitlines()[10] == hexo.GENERATED
 
 
@@ -205,13 +205,12 @@ def test_check_catches_each_class(built):
 
 def test_hexo_sync(tmp_path):
     blog = tmp_path / "source"
-    (blog / "fr/btcguide").mkdir(parents=True)
-    (blog / "fr/btcguide/keep.md").write_text("fr")
+    blog.mkdir()
     r = subprocess.run(["make", "hexo-sync", f"BLOG={blog}"], cwd=hexo.ROOT, capture_output=True, text=True)
     assert r.returncode == 0, r.stderr
     assert (blog / "btcguide/setup-wallets/paper/index.md").exists()
     assert (blog / "media/btcguide/guide/bip39_wordlist.pdf").exists()
-    assert (blog / "fr/btcguide/keep.md").read_text() == "fr"
+    assert not (blog / "fr/btcguide").exists() and "no French pages to sync" in r.stdout
     (blog / "btcguide/stray.md").write_text("x")  # any non-generated file under btcguide/ is a blog-side edit
     r = subprocess.run(["make", "hexo-sync", f"BLOG={blog}"], cwd=hexo.ROOT, capture_output=True, text=True)
     assert r.returncode != 0 and "stray.md" in r.stdout + r.stderr
@@ -227,43 +226,29 @@ def test_hexo_sync(tmp_path):
     assert subprocess.run(["make", "hexo-sync"], cwd=hexo.ROOT, capture_output=True).returncode != 0  # BLOG required
 
 
-def test_fr_scaffold(built, tmp_path):
-    blog = tmp_path / "source"
-    existing = blog / "fr/btcguide/quorum/index.md"
-    existing.parent.mkdir(parents=True)
-    existing.write_text("déjà traduit")
-    created = hexo.fr_scaffold(blog)
-    assert existing.read_text() == "déjà traduit" and existing not in created
-    assert len(created) == len(hexo.guide_pages()) - 1
-    fr = (blog / "fr/btcguide/setup-wallets/paper/index.md").read_text()
-    head = fr.split("---\n")[1]
-    assert "lang: fr\n" in head and "comments: false\n" in head and "tree_view: true\n" in head
-    assert re.search(r"^translated_from: [0-9a-f]{7,}", head, re.M) and 'title: "Setup Paper Wallet"' in head
-    assert "> *Cette page n'est pas encore traduite. Le texte anglais suit.*" in fr
-    assert "](/fr/btcguide/setup-wallets/keystone/)" in fr and "](/btcguide/" not in fr
-    assert "/media/btcguide/img/" in fr and hexo.GENERATED not in fr
-    assert hexo.fr_scaffold(blog) == []
+def test_hexo_sync_french(fr_tree, tmp_path):
+    if (hexo.ROOT / "fr").exists():
+        pytest.skip("make reads the real fr/ tree")
+    shutil.copytree(fr_tree, hexo.ROOT / "fr")  # make runs in a subprocess, which cannot see the monkeypatched build.FR
+    try:
+        _sync_french(tmp_path)
+    finally:
+        shutil.rmtree(hexo.ROOT / "fr")
 
 
-def test_stale(built, tmp_path, capsys):
+def _sync_french(tmp_path):
     blog = tmp_path / "source"
-    blog.mkdir()
-    hexo.fr_scaffold(blog)
-    assert hexo.stale(blog) == 0 and "all French pages up to date" in capsys.readouterr().out
-    fr = blog / "fr/btcguide/setup-wallets/paper/index.md"
-    txt = fr.read_text()
-    fr.write_text(re.sub(r"^translated_from: .*$", "translated_from: 9837ce8", txt, flags=re.M).replace("](/fr/btcguide/", "](/btcguide/", 1))
-    orphan = blog / "fr/btcguide/gone/index.md"
-    orphan.parent.mkdir()
-    orphan.write_text("---\ntranslated_from: 9837ce8\n---\nx")
-    dirty = blog / "fr/btcguide/quorum/index.md"
-    dirty.write_text(re.sub(r"^translated_from: .*$", "translated_from: 9837ce8-dirty", dirty.read_text(), flags=re.M))
-    assert hexo.stale(blog) == 1
-    out = capsys.readouterr().out
-    assert "STALE fr/btcguide/setup-wallets/paper/index.md: 9837ce8 -> " in out
-    assert "WARN fr/btcguide/setup-wallets/paper/index.md: 1 link(s)" in out
-    assert "ORPHAN fr/btcguide/gone/index.md" in out
-    assert "STALE fr/btcguide/quorum/index.md: 9837ce8-dirty -> " in out and "uncommitted" in out
+    (blog / "fr/btcguide/quorum").mkdir(parents=True)
+    (blog / "fr/btcguide/quorum/index.md").write_text("hand-written")
+    r = subprocess.run(["make", "hexo-sync", f"BLOG={blog}"], cwd=hexo.ROOT, capture_output=True, text=True)  # fr_tree is on disk, so make builds French too
+    assert r.returncode != 0 and "fr/btcguide/quorum/index.md" in r.stdout + r.stderr and "delete" in (r.stdout + r.stderr).lower()
+    (blog / "fr/btcguide/quorum/index.md").unlink()
+    r = subprocess.run(["make", "hexo-sync", f"BLOG={blog}"], cwd=hexo.ROOT, capture_output=True, text=True)
+    assert r.returncode == 0, r.stderr
+    assert "lang: fr" in (blog / "fr/btcguide/why-multisig/index.md").read_text()
+    assert len(list((blog / "fr/btcguide").glob("**/index.md"))) == len(hexo.guide_pages())
+
+
 
 
 def test_git_stamp_untracked_page():  # a brand-new page must preview, not crash
@@ -276,16 +261,6 @@ def test_git_stamp_untracked_page():  # a brand-new page must preview, not crash
     assert sha.endswith("-dirty") and re.fullmatch(r"\d{4}-\d\d-\d\d \d\d:\d\d:\d\d", date)
 
 
-def test_blog_required_for_fr_targets(tmp_path):
-    for target in ("hexo-fr-scaffold", "hexo-stale"):
-        r = subprocess.run(["make", target], cwd=hexo.ROOT, capture_output=True, text=True)
-        assert r.returncode != 0 and "BLOG=" in r.stdout + r.stderr, target
-    assert not (hexo.ROOT / "fr").exists()
-    with pytest.raises(SystemExit):
-        hexo.stale(tmp_path / "nope")
-    with pytest.raises(SystemExit):
-        hexo.fr_scaffold(tmp_path / "nope")
-
 
 def test_description_from_front_matter():
     pages = hexo.guide_pages()
@@ -295,3 +270,107 @@ def test_description_from_front_matter():
         desc = hexo.read_page(p)[0]["description"]  # every page carries a hand-written one
         assert 20 < len(desc) <= 160 and ": " not in desc and desc[0].isalpha()
         assert f"description: {json.dumps(desc, ensure_ascii=False)}" in hexo.render_page(p, pages)
+
+
+def test_prefix_and_hexo_url_fr():
+    assert hexo.prefix("fr") == "/fr/btcguide" and hexo.hexo_url("/equipment", "x", "fr") == "/fr/btcguide/equipment/#x"
+
+
+def test_guide_pages_fr_titles_and_stubs(fr_tree):
+    en, fr = hexo.guide_pages(), hexo.guide_pages("fr")
+    assert [p.url for p in fr] == [p.url for p in en] and all(p.lang == "fr" for p in fr)
+    by = {p.url: p for p in fr}
+    assert by[""].title == "Guide Bitcoin Sécurité 10x" and not hexo.is_stub(by[""])
+    assert by["/why-multisig"].title == "Pourquoi le multisig ?" and not hexo.is_stub(by["/why-multisig"])
+    assert by["/equipment"].title == "Matériel" and hexo.is_stub(by["/equipment"])  # stub of a TOC page: the French label
+    assert by["/equipment-advanced"].title == "Equipment" and hexo.is_stub(by["/equipment-advanced"])  # no label, no file: English title
+    assert hexo.display_title(by["/equipment-advanced"]) == "Equipment » Considérations avancées"
+    assert hexo.display_title(by["/known-issues/hardware/coldcard"]) == "Problèmes connus : Coldcard"
+    assert by["/license"].title == "Licence" and by["/disclaimer"].title == "Avertissement"
+
+
+def test_render_french_page_and_stub(fr_tree):
+    pages = hexo.guide_pages("fr")
+    by = {p.url: p for p in pages}
+    out = hexo.render_page(by["/why-multisig"], pages)
+    fr = hexo.book.FR.relative_to(hexo.ROOT)
+    assert "lang: fr\n" in out and f'btcguide_source: "{fr}/_pages/why-multisig.md"' in out
+    assert "[lien](/fr/btcguide/how-it-works/)" in out and "» Section suivante : [Comment ça marche](/fr/btcguide/how-it-works/)" in out
+    assert "![](/media/btcguide/img/setup-paper-seedpicker-example-output.png)" in out  # shared media
+    assert "[considérations avancées](/fr/btcguide/why-multisig-advanced/)" in out
+    assert f"(https://github.com/piprim/btcguide.github.io/blob/master/{fr}/_pages/why-multisig.md)" in out and "[Licence MIT](/fr/btcguide/license/)" in out and "Dernière mise à jour" in out
+    stub = hexo.render_page(by["/equipment"], pages)
+    assert "*Cette page n'est pas encore traduite. [Lire la version anglaise](/btcguide/equipment/).*" in stub
+    assert 'btcguide_source: "_pages/equipment.md"' in stub and "blob/master/_pages/equipment.md" in stub
+    assert 'title: "Matériel"' in stub
+    assert "← [Pick Quorum » Considérations avancées](/fr/btcguide/quorum-advanced/) · [Equipment » Considérations avancées](/fr/btcguide/equipment-advanced/) →" in stub
+    assert "Ubuntu" not in stub  # blank: no English body
+    coldcard = hexo.render_page(by["/known-issues/hardware/coldcard"], pages)
+    assert "Python en français." in coldcard and 'title: "Problèmes connus : Coldcard"' in coldcard
+    assert '<a id="bug-de-gnration-de-graine-2021--2026"></a>\n\n<a id="weak-seed-generation-bug-2021-to-2026"></a>' in coldcard
+
+
+def test_render_french_missing_include_fails(fr_tree):
+    (fr_tree / "_includes/hw/python.md").unlink()
+    pages = hexo.guide_pages("fr")
+    with pytest.raises(SystemExit, match="fr/_includes/hw/python.md missing"):
+        hexo.render_page({p.url: p for p in pages}["/known-issues/hardware/coldcard"], pages)
+
+
+def test_french_home(fr_tree):
+    pages = hexo.guide_pages("fr")
+    home = hexo.render_page(pages[0], pages)
+    assert "## Table des matières" in home and "### Guide (fr)" in home
+    assert "- [Introduction : pourquoi le multisig ?](/fr/btcguide/why-multisig/)" in home
+    assert "releases/download/book/btcguide-fr.pdf" in home and "releases/download/book/btcguide.pdf" not in home
+
+
+def test_check_accepts_stub_links_only_to_real_pages(built, fr_tree):
+    pages = hexo.guide_pages("fr")
+    good = {p.url: hexo.render_page(p, pages) for p in pages}
+    media = hexo.HEXO_OUT / "media/btcguide"
+    assert hexo.check(good, media, len(good)) == []
+    bad = dict(good)
+    bad["/equipment"] = good["/equipment"].replace("(/btcguide/equipment/)", "(/btcguide/nope/)")
+    assert hexo.check(bad, media, len(good))
+
+
+def test_build_both_languages(fr_tree):
+    hexo.build()
+    out = hexo.HEXO_OUT
+    assert (out / "page/btcguide/equipment/index.md").exists() and (out / "page/fr/btcguide/equipment/index.md").exists()
+    assert len(list(out.glob("page/fr/btcguide/**/index.md"))) == len(hexo.guide_pages())
+    assert not (out / "media/fr").exists() and not (out / "page/fr/media").exists()  # media once
+    assert "lang: fr" in (out / "page/fr/btcguide/why-multisig/index.md").read_text()
+
+
+def test_build_skips_french_without_toc(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(hexo.book, "FR", tmp_path / "fr")
+    hexo.build()
+    assert "fr/index.html missing, French pages skipped" in capsys.readouterr().err
+    assert not (hexo.HEXO_OUT / "page/fr").exists()
+
+
+def test_build_fails_on_french_toc_mismatch(fr_tree):
+    idx = fr_tree / "index.html"
+    idx.write_text(idx.read_text().replace('<li><a href="/how-it-works">How it Works</a></li>', "", 1))
+    with pytest.raises(SystemExit, match="TOC mismatch"):
+        hexo.build()
+
+
+def test_french_headings_keep_english_anchors(fr_tree):
+    pages = hexo.guide_pages("fr")
+    by = {p.url: p for p in pages}
+    out = hexo.render_page(by["/key-rotation"], pages)
+    assert '<a id="quand-renouveler"></a>\n\n<a id="when-to-rotate"></a>\n\n## Quand renouveler' in out
+    assert "[comment](#how-to-rotate)" in out
+    assert "[ancre](/fr/btcguide/key-rotation/#when-to-rotate)" in hexo.render_page(by["/why-multisig"], pages)
+    assert hexo.check({p.url: hexo.render_page(p, pages) for p in pages}, hexo.HEXO_OUT / "media/btcguide", len(pages)) == []
+
+
+def test_french_heading_count_must_match_english(fr_tree):
+    f = fr_tree / "_pages/key-rotation.md"
+    f.write_text(f.read_text().replace("#### Comment renouveler", "Comment renouveler"))
+    pages = hexo.guide_pages("fr")
+    with pytest.raises(SystemExit, match=r"key-rotation.md: 1 heading\(s\), English has 2"):
+        hexo.render_page({p.url: p for p in pages}["/key-rotation"], pages)

@@ -1,5 +1,7 @@
 # Publishing the guide as Hexo pages on blog.piprime.fr
 
+> The "French workflow" section and the hand-written-French decisions below are superseded by FRENCH-SPEC.md (2026-10-28): French is generated from the `fr/` tree in this repository.
+
 Design spec, 2026-10-26. Implemented by `_book/hexo.py`, which reuses helpers from `_book/build.py`.
 
 ## Intent
