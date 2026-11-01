@@ -67,7 +67,7 @@ def test_strings_same_keys():
 
 def test_render_french_page(fr_tree):
     out = build.render(build.ROOT / "_pages/why-multisig.md", "/why-multisig", 2, "why-multisig", lang="fr", label="Introduction : pourquoi le multisig ?")
-    assert out.startswith("## Pourquoi le multisig ? {#why-multisig}\n\nTexte français avec un [lien](#how-it-works) et une [ancre](#when-to-rotate).")
+    assert out.startswith("## Pourquoi le multisig ? {#why-multisig}\n\nTexte français avec un [lien](#how-it-works) et une [ancre](#key-rotation--when-to-rotate).")
     assert "{%" not in out and "Comment ça marche" not in out  # next_steps is dropped in the book, as in English
 
 
@@ -90,7 +90,7 @@ def test_main_french_book(fr_tree):
     assert book.startswith("---\ntitle: Guide Bitcoin Sécurité 10x\nsubtitle: Comment conserver des bitcoins sans aucun point de défaillance unique\nlang: fr\n---\n\n# Introduction {#home}\n")
     assert "# Guide (fr)\n" in book and "## Pourquoi le multisig ? {#why-multisig}" in book
     assert "## Avertissement {#disclaimer}" in book and "# Annexes\n" in book and "## Licence {#license}\n\nCe guide est publié sous licence MIT." in book
-    assert book.count("Cette page n'est pas encore traduite") == len(hexo.guide_pages()) - 6  # every page but home, why-multisig, coldcard, key-rotation, disclaimer, license
+    assert book.count("Cette page n'est pas encore traduite") == len(hexo.guide_pages()) - 7  # every page but home, why-multisig, coldcard, common hardware issues, key-rotation, disclaimer, license
     assert "releases/download/book/" not in book.split("# Guide (fr)")[0]
 
 
@@ -112,8 +112,8 @@ def test_main_french_toc_mismatch_fails(fr_tree):
 
 def test_render_french_headings_get_english_ids(fr_tree):
     out = build.render(build.ROOT / "_pages/key-rotation.md", "/key-rotation", 2, "key-rotation", lang="fr")
-    assert "### Quand renouveler {#when-to-rotate}\n" in out and "### Comment renouveler {#how-to-rotate}\n" in out
-    assert "[comment](#how-to-rotate)" in out
+    assert "### Quand renouveler {#key-rotation--when-to-rotate}\n" in out and "### Comment renouveler {#key-rotation--how-to-rotate}\n" in out
+    assert "[comment](#key-rotation--how-to-rotate)" in out
     f = build.FR / "_pages/key-rotation.md"
     f.write_text(f.read_text().replace("#### Comment renouveler", "Comment renouveler"))
     with pytest.raises(SystemExit, match=r"key-rotation.md: 1 heading\(s\), English has 2"):

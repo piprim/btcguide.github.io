@@ -117,13 +117,17 @@ def site_path(link, page_dir):
     return posixpath.normpath(path).rstrip("/"), frag
 
 
-def resolve_link(link, page_dir):
-    """Turn a site link into a heading id. External and same-page links are returned as-is."""
+def resolve_link(link, page_dir, page_anchor):
+    """Turn a site link into a heading id. External links are returned as-is; a fragment becomes
+    "<page slug>--<fragment>", the id every section heading gets, so that identical headings on
+    several pages (the known-issues stubs) never capture a link meant for another page."""
     sp = site_path(link, page_dir)
-    if sp is None or sp[0] == "#":
+    if sp is None:
         return link
     path, frag = sp
-    return "#" + (re.sub(r"^[^a-zA-Z]+", "", frag) if frag else slug(path) or "home")
+    if path == "#":
+        return f"#{page_anchor}--{frag}"
+    return "#" + (f"{slug(path) or 'home'}--{re.sub(r'^[^a-zA-Z]+', '', frag)}" if frag else slug(path) or "home")
 
 
 def normalize_headings(body, base):
@@ -186,19 +190,19 @@ def render(f, url, depth, anchor, title_suffix="", lang="en", label=None):
     body = source(lf, lang)
     title = front_title(lf) or slug(url)
     page_dir = url.rstrip("/") + "/" if f.name == "index.md" else url.rsplit("/", 1)[0] + "/"
-    en_ids = iter(english_anchors(body, lf, source(f, "en"), "build.py")) if lang != "en" else None
+    en_ids = english_anchors(body, lf, source(f, "en"), "build.py") if lang != "en" else None
     body = re.sub(r"{%.*?%}", "", body, flags=re.S)
     body = body.replace("{{ page.title }}", title)
     body = re.sub(r"{:[^}]*?width=\"(\d+%)\"[^}]*}", r"{width=\1}", body)  # kramdown width -> pandoc width
     body = re.sub(r"{:[^}]*}", "", body)
     body = re.sub(r"^-{3,}\s*$", "* * *", body, flags=re.M)  # a bare --- line would start a YAML block in pandoc
     body = normalize_headings(body, depth)  # pages skip levels (## then ####)
-    if en_ids:
-        body = HEADING.sub(lambda mm: f"{mm.group(1)} {mm.group(2)} {{#{next(en_ids)}}}", body)  # pandoc explicit id
+    ids = iter(en_ids or [slugify(h) for _, h in HEADING.findall(body)])
+    body = HEADING.sub(lambda mm: f"{mm.group(1)} {mm.group(2)} {{#{anchor}--{next(ids)}}}", body)  # pandoc explicit id, page-qualified
     body = re.sub(r"^\[TODO\]:.*$", "", body, flags=re.M)  # maintainer notes, invisible on the site too
     body = body.replace(" (✓)", "")  # no check mark glyph in the PDF font
     body = re.sub(r"\]\(/assets/", "](assets/", body)
-    body = re.sub(r"\]\(([^)\s]+)\)", lambda mm: "](" + ("assets/" + mm.group(1)[7:] if mm.group(1).startswith("assets/") else resolve_link(mm.group(1), page_dir)) + ")", body)
+    body = re.sub(r"\]\(([^)\s]+)\)", lambda mm: "](" + ("assets/" + mm.group(1)[7:] if mm.group(1).startswith("assets/") else resolve_link(mm.group(1), page_dir, anchor)) + ")", body)
     body = re.sub(r"<(/[a-z][^>\s]*)>", lambda mm: f"[{mm.group(1)}](#{slug(mm.group(1))})", body)  # bare </foo> autolinks
     return heading(title) + body.strip() + "\n\n"
 

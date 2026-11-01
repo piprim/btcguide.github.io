@@ -25,6 +25,9 @@ def fr_tree(monkeypatch):
         # derived from the English page: same headings (one translated), same includes
         "_pages/known-issues/hardware/coldcard.md": (build.ROOT / "_pages/known-issues/hardware/coldcard.md").read_text()
                                                     .replace("#### Weak Seed Generation Bug (2021 to 2026)", "#### Bug de génération de graine (2021 à 2026)", 1),
+        # the common page the includes link into, so their fragments resolve (headings kept)
+        "_pages/known-issues/hardware/index.md": (build.ROOT / "_pages/known-issues/hardware/index.md").read_text()
+                                                 .replace("title: Common Hardware Wallet Issues", "title: Problèmes courants des portefeuilles matériels", 1),
         "_includes/hw/python.md": "Python en français.\n\n" + (build.ROOT / "_includes/hw/python.md").read_text(),  # includes keep their headings too
         "_includes/hw/encouragement.md": (build.ROOT / "_includes/hw/encouragement.md").read_text(),
         "_includes/hw/psbt.md": "PSBT en français.\n",
